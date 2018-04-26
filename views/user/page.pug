@@ -1,0 +1,104 @@
+extends ../layout
+
+block content
+    h1.page-header=uname
+        if(isAdmin)
+            | &nbsp;
+            small
+                span.badge.badge-success сотрудник
+    .row.margin-bottom-md
+        .col-md-12
+            | Зарегистрирован&nbsp;
+            =regDates.Date
+            | &nbsp;в&nbsp;
+            =regDates.Time
+            span.gray-light &nbsp;(
+              =regDates.DateFromNow
+              | )
+        .col-md-12
+            if(lastactive > 15)
+                | Последний раз был на сайте&nbsp;
+                =lastDates.Date
+                | &nbsp;в&nbsp;
+                =lastDates.Time
+                span.gray-light &nbsp;(
+                    =lastDates.DateFromNow
+                    | )
+            else
+                | Пользователь онлайн!
+    .row
+        .col-md-5
+            a.btn.btn-light(href='/chat?user='+uid) Отправить сообщение
+    -var id = '';
+    each chip in chips
+        if chip._game._id != id
+            -id = chip._game._id;
+            a(href='/chips/' + chip._chip_page.chip_id)
+                h2=chip._game.title
+            table.table.table-hover.results-table
+                thead
+                    th Серевер
+                    if chip.side_id
+                        th.side Сторона
+                    th.amount.text-right Наличие
+                    th.price.text-right Цена
+                        |  за
+                        | &nbsp;
+                        =chip._chip_page.currency_sell_count
+                        | &nbsp;
+                        =chip._chip_page.currency_sell_sufix
+                tbody
+                    each chip2 in chips
+                        if chip2._game._id == id
+                            tr.offer-row(data-link='/chips/offer/' + chip2._id)
+                                td=chip2._chip_page.servers.id(chip2.server_id).name
+                                if chip2.side_id
+                                    td=chip2._chip_page.sides.id(chip2.side_id).name
+                                td.text-right=numeral(chip2.count).format('0,0').replace(/,/g,' ')
+                                    =" "+ chip2._chip_page.currency_sell_sufix
+                                td.text-right=chip2.price.toFixed(2)
+                                    i.fa.fa-rub
+    -id = '';
+
+    each lot in lots
+        if lot._game._id != id
+            -id = lot._game._id;
+            a(href='/lots/'+lot._lot_page.lot_id)
+                h2=lot._game.title
+            table.table.table-hover.results-table
+                thead
+                    th.server Серевер
+                    if lot.side
+                        th.side Сторона
+                    th Описание
+                    th.amount.text-right Цена
+                tbody
+                    each lot2 in lots
+                        if lot2._game._id == id
+                            tr.offer-row(data-link='/lots/offer/'+lot2._id)
+                                td=lot2._lot_page.servers.id(lot2.server).name
+                                if lot2.side
+                                    td=lot2._lot_page.sides.id(lot2.side).name
+                                td=lot2.short_desc
+                                td.text-right=lot2.price.toFixed(2)
+                                    i.fa.fa-rub
+
+    .row
+        .col-md-12
+            h3 Отзывы
+            if reviews.length>0
+                each review in reviews
+                    .panel.panel-default
+                        .panel-heading
+                            =review.time
+                            |&nbsp;
+                            =review.subject
+                        .panel-body=review.message
+                        if(review.reply && review.reply != "")
+                            .panel-footer
+                                p.text-info ответ продавца:
+                                =review.reply
+
+            else
+                p
+                    | Отзывы отстствуют.

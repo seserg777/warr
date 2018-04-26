@@ -1,0 +1,78 @@
+extends ../../layout
+
+
+block content
+    .page-header
+        h1 Оформление заказа
+    .bs-callout.bs-callout-info
+        h4 Обратите внимание
+        p Перед покупкой настоятельно рекомендуем связатся с продавцом в чате ниже и уточнить сроки и способ доставки.
+    .row
+        .col-md-1
+            b.text-muted Продавец
+        .col-md-1
+            p
+                a(href='/users/'+offer._owner._id)=offer._owner.username
+                | &nbsp;
+                if offer._owner.isOnline
+                    label.badge.badge-success online
+                else
+                    if offer._owner.isInTouch
+                        label.badge.badge-info на связи
+                    else
+                        label.badge.badge-danger offline
+    .row
+        .col-md-1
+            b.text-muted Игра
+        .col-md-4
+            p=offer._game.title
+    .row
+        .col-md-1
+            b.text-muted Сервер
+        .col-md-4
+            p=offer._server.name
+    if(offer._side)
+        .row
+            .col-md-1
+                b.text-muted Сторона
+            .col-md-4
+                p=offer._side.name
+    if(offer._race)
+        .row
+            .col-md-1
+                b.text-muted Раса
+            .col-md-4
+                p=offer._race.name
+    if(offer._class)
+        .row
+            .col-md-1
+                b.text-muted Раса
+            .col-md-4
+                p=offer._class.name
+    if(offer._lot_page.custom_fields)
+        each cf in offer.customs
+            .row
+                .col-md-1
+                    b.text-muted=cf.title
+                .col-md-4
+                    p=cf.value
+    .row
+        .col-md-1
+            b.text-muted Описание
+        .col-md-11
+            p=offer.description
+
+    .row.margin-bottom-lg
+        .col-md-5
+            form(method='post')#offer-form.offer-form
+                .form-group
+                    label(for='payment-method')
+                    select(name='paymentMethod').form-control#payment-method
+                        each method in methods
+                            option(data-price=method.price, data-currency=method.currency, value=method._id)=method.title2
+                input(type='hidden', name='lot_id', value=offer._id)
+                input(type='hidden', name='_csrf', value=_csrf)
+                button.btn.btn-primary Купить
+    if(offer._owner._id.toString() !== user._id.toString())
+        include ../../partials/chat
+    include ../../partials/reviews

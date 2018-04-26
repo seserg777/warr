@@ -1,0 +1,75 @@
+extends ../layout
+block scripts
+    script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js', type="text/javascript")
+    script(src='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js', type="text/javascript")
+
+block stylesheets
+    link(rel='stylesheet', href='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css')
+
+block content
+    h2 Управление сайтом
+    include partials/header
+    .row.margin-bottom-md
+    .row
+        .col-md-12
+            .panel.panel-info
+                .panel-heading
+                    h3.panel-title Прибыль сайта
+                .panel-body
+                    form(action=adminPage + '/calculate-profit', method='post').form-horizontal
+                        table.table.table-responsive
+                            thead
+                                tr
+                                    th
+                                    th Мин. сделка
+                                    th Макс. сделка
+                                    th Кол-во сделок
+                                    th Оборот
+                                    th Прибыль
+                            tbody
+                                tr
+                                    td
+                                        strong За день
+                                    td=profit.daily.minPrice.toFixed(2)
+                                    td=profit.daily.maxPrice.toFixed(2)
+                                    td=profit.daily.ordersCount.toFixed(0)
+                                    td=profit.daily.sum.toFixed(2)
+                                    td=profit.daily.profit.toFixed(2)
+                                tr
+                                    td
+                                        strong За неделю
+                                    td=profit.weakly.minPrice.toFixed(2)
+                                    td=profit.weakly.maxPrice.toFixed(2)
+                                    td=profit.weakly.ordersCount.toFixed(0)
+                                    td=profit.weakly.sum.toFixed(2)
+                                    td=profit.weakly.profit.toFixed(2)
+                                tr
+                                    td
+                                        strong За месяц
+                                    td=profit.monthly.minPrice.toFixed(2)
+                                    td=profit.monthly.maxPrice.toFixed(2)
+                                    td=profit.monthly.ordersCount.toFixed(0)
+                                    td=profit.monthly.sum.toFixed(2)
+                                    td=profit.monthly.profit.toFixed(2)
+                                tr
+                                    td
+                                        strong За год
+                                    td=profit.yearly.minPrice.toFixed(2)
+                                    td=profit.yearly.maxPrice.toFixed(2)
+                                    td=profit.yearly.ordersCount.toFixed(0)
+                                    td=profit.yearly.sum.toFixed(2)
+                                    td=profit.yearly.profit.toFixed(2)
+                                tr
+                                    td
+                                        input.form-control(type="text", name="daterange", id='date-range', value= profit.custom.custom_date ?profit.custom.custom_date: null )
+                                        td=profit.custom.minPrice.toFixed(2)
+                                        td=profit.custom.maxPrice.toFixed(2)
+                                        td=profit.custom.ordersCount.toFixed(0)
+                                        td=profit.custom.sum.toFixed(2)
+                                        td=profit.custom.profit.toFixed(2)
+                        input(type='hidden', name='_csrf' value=_csrf)
+                        .form-group
+                            .col-sm-offset-4.col-sm-8
+                                button.btn.btn-default(type='submit') Пересчитать
+
+

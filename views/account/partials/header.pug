@@ -1,0 +1,12 @@
+ul.nav.nav-tabs
+    li.nav-item()
+        a.nav-link(href="/account/balance" class=(headerCode == 500) ? 'active' : undefined) Баланс
+    li.nav-item()
+        a.nav-link(href="/account/profile" class=(headerCode == 501) ? 'active' : undefined) Аккаунт
+    li.nav-item()
+        a.nav-link(href="/account/wallets" class=(headerCode == 502) ? 'active' : undefined) Кошельки
+    li.nav-item()
+        a.nav-link(href="/account/notifications" class=(headerCode == 503) ? 'active' : undefined) Уведомления
+    li.nav-item()
+        a.nav-link(href="/account/partner" class=(headerCode == 504) ? 'active' : undefined) Партнёрская система
+

@@ -1,0 +1,89 @@
+extends ../layout
+block content
+    h2 Пользователи
+    include partials/header
+    .row.margin-bottom-sm
+        .col-md-2
+            input.form-control(type="text", name="daterange", id='date-range' )
+    .row
+        .col-md-12
+            table#users-table.table.table-striped.table-bordered(data-order='[[ 1, "desc" ]]')
+                thead
+                    tr
+                        th Ник
+                        th Почта
+                        th Последний визит
+                        th Статус
+                        th Телефон
+                        th WM
+                        th Y.m
+                        th Qiwi
+                        th Сделок
+                        th Сумма продаж
+                        th Действие
+                tbody
+
+    .modal.fade.bs-user-options(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel')
+        .modal-dialog.modal-sm(role='document')
+            .modal-content
+                .row
+                    button(onclick="unBan(this)")#modal-ban.btn.btn-lg.col-md-12
+                .row
+                    button(onclick="location.href='/chat?user='+$(this).data('uid');")#modal-chat.btn.btn-default.btn-lg.col-md-12 Написать в чат
+                .row
+                    button(onclick="editProfile(this)", data-toggle="modal", data-target=".bs-edit-user", data-dismiss="modal")#modal-edit-user.btn.btn-primary.btn-lg.col-md-12 Редактировать
+                .row
+                    button(onclick="enablePS(this)")#modal-partner.btn.btn-lg.col-md-12
+
+    .modal.fade.bs-edit-user(tabindex='-1', role='dialog')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h4 Изменить пользователя
+                    button.close(data-dismiss="modal", aria-label="Close")
+                        span(aria-hidden="true") &times;
+                .modal-body
+                    .form-horizontal
+                        .form-group
+                            label.col-sm-3.control-label(for='edit-user-email') Email
+                            .col-sm-7
+                                input.form-control(type='email', name='email', id='edit-user-email')
+                        .form-group
+                            label.col-sm-3.control-label(for='edit-user-username') Имя
+                            .col-sm-7
+                                input.form-control(type='text', name='username', id='edit-user-username', autocomplete="false")
+                        .form-group
+                            label.col-sm-3.control-label Админ
+                            .col-sm-7
+                                label.col-sm-3.checkbox
+                                    input(type='checkbox', name='isAdmin', id="edit-user-admin")
+                        .form-group
+                            label.col-sm-3.control-label(for='edit-user-password') Новый пароль
+                            .col-sm-7
+                                .input-group
+                                    input.form-control(type='text', name='passwordx', id='edit-user-password', autocomplete="new-password", disabled)
+                                    span.input-group-btn
+                                        button(onclick="generate_password(this);").btn.btn-default рандом
+                        .form-group
+                            label.col-sm-3.control-label Отключить вход через ВК
+                            .col-sm-7
+                                label.checkbox: input.form-control(type='checkbox', name='disableVK', id="edit-user-disable-vk")
+                        .form-group
+                            label.col-sm-3.control-label Отключить вход через Google
+                            .col-sm-7
+                                label.checkbox: input.form-control(type='checkbox', name='disableGoogle', id="edit-user-disable-google")
+                        .form-group
+                            label.col-sm-3.control-label Отключить вход через Steam
+                            .col-sm-7
+                                label.checkbox: input.form-control(type='checkbox', name='disableSteam', id="edit-user-disable-steam")
+
+                .modal-footer
+                    button.btn.btn-default(data-dismiss="modal") Закрыть
+                    button#save-user-btn.btn.btn-primary(onclick="saveChanges(this)") Сохранить изменеия
+block scripts
+    script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js', type="text/javascript")
+    script(src='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js', type="text/javascript")
+
+
+block stylesheets
+    link(rel='stylesheet', href='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css')

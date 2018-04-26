@@ -1,0 +1,86 @@
+extends ../../layout
+
+block content
+    .page-header
+        h1
+            | #{cp.currency} #{cp._game.title} (#{cp._game.localization.join(', ')})
+        a(href='/chips/'+cp.chip_id)
+            i.fa.fa-arrow-left
+            |Вернутся в раздел предложений
+    form(method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .row
+            .col-md-2
+                .form-group
+                    label(for='min_count') Мин. сумма заказа
+                    .input-group
+                        input.number#min_count.form-control(name='min_order', type='number', aria-describedby='price-addon', value=min_order, min=10, max=10000 required=true)
+                        span#price-addon.input-group-addon
+                            i.fa.fa-rub
+        .row
+            .col-md-12
+        .row
+            .col-md-8
+                table.table.table-hover.trade-table
+                    thead
+                        tr
+                            th Включить
+                            th Сервер
+                            if(cp.sides && cp.sides.length)
+                                th Сторона
+                            th Цена за 
+                                = cp.currency_sell_count+' '+cp.currency_sell_sufix
+                            th &nbsp;
+                            th Наличие
+                    tbody
+                        - var poin = 0;
+                        each chip in chips
+                            if(cp.sides && cp.sides.length > 0)
+                                    tr
+                                        td
+                                            input.js-switch(type='checkbox', name='chip['+chip.server_id+']['+chip.side_id+'][toggle_on]', checked=chip.toggle_on)
+                                        td(valign='middle')=chip.server_name
+                                        td=chip.side_name
+                                        td
+                                            .input-group
+                                                input.price.number-3.form-control(type='text', aria-describedby='price-addon', name='chip['+chip.server_id+']['+chip.side_id+'][price]' value=chip.price)
+                                                span#price-addon.input-group-addon
+                                                    i.fa.fa-rub
+                                        td
+                                            a.comission-calc(href='javascript:void(0)', data-remote="false", data-toggle="modal", data-target="#prices", data-cp=cp._id)
+                                                i.fa.fa-info-circle
+                                        td
+                                            .input-group
+                                                input.count.number.form-control(type='text', aria-describedby='price-addon', name='chip['+chip.server_id+']['+chip.side_id+'][count]' value=chip.count)
+                                                span#price-addon.input-group-addon=cp.currency_sell_sufix
+                                        - poin++;
+                            else
+                                tr
+                                    td
+                                        input.js-switch(type='checkbox',name='chip[' + chip.server_id + '][toggle_on]', checked=chip.toggle_on)
+                                    td(valign='middle')=chip.server_name
+                                    td
+                                        .input-group
+                                            input.price.number-3.form-control(type='text', aria-describedby='price-addon', name='chip[' + chip.server_id + '][price]' value=chip.price)
+                                            span#price-addon.input-group-addon
+                                                i.fa.fa-rub
+                                    td
+                                        a.comission-calc(href='javascript:void(0)', data-remote="false", data-toggle="modal", data-target="#prices", data-cp=cp._id)
+                                            i.fa.fa-info-circle
+                                    td
+                                        .input-group
+                                            input.count.number.form-control(type='text', aria-describedby='price-addon' ,name='chip[' + chip.server_id + '][count]' value=chip.count)
+                                            span#price-addon.input-group-addon=cp.currency_sell_sufix || cp.currency_plural
+                                - poin++;
+        .row
+            .col-md-3
+                input.btn.btn-primary(type='submit', value='Сохранить')
+        #prices.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        h4#myModalLabel.modal-title Цены для покупателей
+                        button.close(type='button', data-dismiss='modal', aria-label='Close')
+                            span(aria-hidden='true') ×
+                    .modal-body
+                        | После ввода цены вы сможете узнать какая стоимость будет для покупателей.

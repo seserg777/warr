@@ -1,0 +1,14 @@
+if(reviews && reviews[0] )
+    h3 Отзывы о продавце
+    each review in reviews
+        .panel.panel-default
+            .panel-heading
+                =review.time
+                |&nbsp;
+                =review.subject
+            .panel-body=review.message
+            if(review.reply && review.reply != "")
+                .panel-footer
+                    p.text-info ответ продавца:
+                    =review.reply
+

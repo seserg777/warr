@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+    .registration-end
+        h1 Спасибо за регистрацию
+        p.lead Для вас мы подготовили специальное видео с обзором основных функций для быстрого старта.
+
+        .embed-responsive.embed-responsive-16by9
+            iframe(width='1280', height='720', src='https://www.youtube.com/embed/z-17c-CUkxs?rel=0&amp;controls=0&amp;showinfo=0&amp;autoplay=1', frameborder='0', allowfullscreen='')
+    .row
+        .col-sm-2.col-sm-offset-5.text-center
+            a.btn.btn-default(href='/') На главную

@@ -1,0 +1,53 @@
+extends ../layout
+
+block content
+    include partials/header
+    .page-header
+        h3 Уведомления &nbsp;
+            if(user.phone && user.phone.number)
+                small Ваш номер: &nbsp;
+                    span.badge.badge-info=user.phone.number
+
+    .row
+        .col-md-9
+            .card
+                .card-header SMS уведомления
+                .card-body
+                    p Хотите доставить заказ максимально быстро? Включите уведомления об оплате на ваш телефон с помощью SMS!
+                    form(method='POST')
+                        input(type='hidden', name='_csrf', value=_csrf)
+
+                        .form-group.checkbox-rounded.checkbox-success-filled
+                            input.filled-in(type='checkbox', id='after_purchase', checked=user.sms_notifications ? user.sms_notifications.after_purchase : "")
+                            label(for='after_purchase') Включить SMS уведомления при оплате покупателем лота.
+                    p.text-muted Настоятельно рекомендуем всегда проверять наличе оплаты даже если вам пришло SMS!
+                .panel-body
+                    p Вы можете подключить платную услугу &nbsp;
+                        label.badge.badge-success на связи
+                        |  в этом случае возле вашего ника будет "на связи" даже если вы offline и вы будете получать СМС уведомления о сообщениях в чате.
+                    form(method='POST')
+                        input(type='hidden', name='_csrf', value=_csrf)
+
+                        .checkbox()
+                            input.notify-switch(type='checkbox', id='on_new_chat', checked=user.sms_notifications ? user.sms_notifications.on_new_chat : "")
+                            label(for='on_new_chat') Включить SMS уведомления при новом сообщении
+                    p.text-muted Стоимость услуги ~ 1.83 рубля за СМС и списывается только при условии что у вас положительный баланс с любого доступного счета.
+
+    .row
+        .col-md-9
+            .panel.panel-info
+                .panel-heading Уведомления в браузере (WebPush)
+                .panel-body
+                    p Вы можете включить отправку уведомлений о новых сообщениях на рабочий стол.
+                    form(method='POST')
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        .row.margin-bottom-md
+                            .col-md-6
+                                .checkbox()
+                                    input.notify-switch(type='checkbox', id='notification', checked=user.push_notifications.enabled)
+                                    label(for='notification') Включить WebPush уведомления
+                    p.text-muted Для удобства зайдите на эту страницу с мобильного, и нажимте кнопку "Добавить устройство".
+block scripts
+    script(src='https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js')
+    script(src='https://www.gstatic.com/firebasejs/4.1.2/firebase-messaging.js')
+

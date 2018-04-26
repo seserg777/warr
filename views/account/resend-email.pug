@@ -1,0 +1,17 @@
+extends ../layout
+block stylesheets
+    script(src='https://www.google.com/recaptcha/api.js')
+block content
+    .col-sm-8.col-sm-offset-2
+        form(method='POST')
+            legend Не пришло письмо?
+            input(type='hidden', name='_csrf', value=_csrf)
+            .form-group
+                label(for='email') Почта указаная при регистрации
+                input.form-control(type='email', name='email', id='email', placeholder='@', autofocus, required, value=email)
+            .from-group
+                .g-recaptcha(data-sitekey='6Lcj6B8UAAAAABHzhbZwkiUEJT_TgkSf0FclMTMD')
+            .form-group
+                button.btn.btn-primary.btn-reset(type='submit')
+                    i.fa.fa-share
+                    | Прислать письмо

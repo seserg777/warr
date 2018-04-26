@@ -1,0 +1,71 @@
+extends ../layout
+block content
+    h2 Денежные операции
+    include partials/header
+    .row.operations
+        .col-md-2
+            .form-group
+                label Платежная система
+                select#ps.form-control(placeholder="Выберите систему")
+                    option(value='webmoney') WebMoney
+                    option(value='yandex') Yandex.M
+                    option(value='qiwi') QIWI
+                    option(value='play4play') Баланс Play4Pay
+        .col-md-2
+            .form-group
+                label Сумма
+                input#sum.number.form-control(name='sum', placeholder='0.00')
+        .col-md-2
+            .form-group
+                label Тип
+                select#type.form-control(placeholder="Выберите систему")
+                    option(value='in')
+                        i.fa.fa-plus
+                        | Пополнение
+                    option(value='out')
+                        i.fa.fa-minus
+                        | Расход
+        .col-md-5
+            .form-group
+                label Комментарий
+                input#comment.form-control(name='comment', placeholder='Комментарий')
+        .col-md-1
+            .form-group
+                label="+"
+                button.pull-right.btn.btn-success Добавить
+    .row
+        .col-md-12
+            table.table.table-condensed
+                thead
+                    tr
+                        th Номер операции
+                        th Пользователь
+                        th Платёжная система
+                        th Кошелёк платильщика
+                        th Сумма
+                        th Комментарий
+                        th Дата
+                tbody.operations-body
+                    each op in operations
+                        tr(class=(op.in_out === "in" ) ? 'success' : 'danger')
+                            td=op.operation_id
+                            td=op.user.username
+                            td=op.type
+                            td=op.wallet
+                            td
+                                i.fa(class=(op.in_out === "in" ) ? 'fa-plus' :'fa-minus' )
+                                =op.sum.toFixed(2)
+                            td=op.comment
+                            td=moment(op.updatedAt).format('HH:mm:ss DD-MM-YYYY')
+
+    .row
+        .col-md-8.col-md-offset-2
+            nav(aira-label="Page navigation")
+                ul.pagination
+
+                    -for (var i = 1; i <= (count+limit-1)/limit; i++)
+                        li.page-item(class=(page==i ? "active" : ""))
+                            a.page-link(href=adminPage+'/operations/'+i)=i
+
+
+

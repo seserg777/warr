@@ -1,0 +1,58 @@
+extends ../layout
+block content
+    h2 Запросы на вывод
+    include partials/header
+    .row
+        .col-md-12
+            table.table.table-condensed
+                thead
+                    tr
+                        th Номер операции
+                        th Пользователь
+                        th Платёжная система
+                        th Кошелёк
+                        th Сумма
+                        th Действие
+                tbody
+                    each op in operations
+                        tr
+                            td=op.operation_id
+                            td=op.user.username
+                            td=op.type
+                            td=op.wallet
+                            td=op.sum
+                            td
+                                if op.status == 0
+                                    button(
+                                    data-id=op._id.toString(),
+                                    data-toggle="modal",
+                                    data-target=".bs-op-options"
+                                    onclick="operation(this)"
+                                    ).btn.btn-default |||
+                                else if op.status == 1
+                                    label.badge.badge-success Выплачено
+                                else if op.status == 2
+                                    label.badge.badge-danger Отменено
+                                else if op.status == 3
+                                    label.badge.badge-primary Возврат
+
+    .row
+        .col-md-8.col-md-offset-2
+            nav(aira-label="Page navigation")
+                ul.pagination
+
+                    -for (var i = 1; i <= (count+limit-1)/limit; ++i)
+                        li(class=(page==i ? "active" : ""))
+                            a(href=adminPage+'/withdrawals/'+i)=i
+
+    .modal.fade.bs-op-options(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel')
+        .modal-dialog.modal-sm(role='document')
+            .modal-content
+                .row
+                    button(onclick="location.href='/admin1337/withdrawals/manage/paid?operation='+$(this).data('id');")#modal-pay.btn.btn-success.btn-lg.col-md-12 Выплачено
+                .row
+                    button(onclick="location.href='/admin1337/withdrawals/manage/cancel?operation='+$(this).data('id');")#modal-reject.btn.btn-default.btn-lg.col-md-12 Отклонить
+                .row
+                    button(onclick="location.href='/admin1337/withdrawals/manage/refund?operation='+$(this).data('id');", data-toggle="modal", data-target=".bs-edit-user", data-dismiss="modal")#modal-refund.btn.btn-primary.btn-lg.col-md-12 Вернуть на баланс
+
+

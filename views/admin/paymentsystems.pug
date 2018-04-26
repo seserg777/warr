@@ -1,0 +1,28 @@
+extends ../layout
+block content
+    h2 Платёжные системы
+    include partials/header
+    table.table.table-condensed
+        thead
+            tr
+                th Титул
+                th Комиссия
+                th Статус
+                th Настройка
+                th Сохранить
+        tbody
+            each system in ps
+                tr
+                    form(action=adminPage+'/payment-systems/save/'+system._id, method='POST')
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        td
+                            input.form-control(value=system.title, name='title')
+                        td
+                            input.number.form-control(value=system.commision, name='commision')
+                        td
+                            a.btn(href=adminPage+ "/payment-systems/switch?id="+system._id, class=system.active ? "btn-danger" : "btn-success")=system.active? "Выключить" : "Включить"
+                        td
+                            a.btn.btn-primary(href=adminPage+'/payment-systems/'+system._id)
+                                i.fa.fa-cogs
+                        td
+                            button.btn.btn-primary Приминить

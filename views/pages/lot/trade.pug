@@ -1,0 +1,210 @@
+extends ../../layout
+
+block content
+    .page-header
+        h1
+            | #{lp._game.title} #{lp._game.localization.length > 0 ? "("+ lp._game.localization.join(', ') + ")" : ""}
+        a(href='/lots/' + lp.lot_id)
+            i.fa.fa-arrow-left
+            | Вернутся в раздел предложений
+    .row
+        .col-md-12
+            table.table.table-hover
+                thead
+                    tr
+                        th Сервер
+                        -if(lp.sides.length>0)
+                            th Сторона
+                        -if(lp.races.length>0)
+                            th Раса
+                        -if(lp.classes.length>0)
+                            th Клас
+                        -if(lp.custom_fields.length>0)
+                            each cf in lp.custom_fields
+                                th=cf.name
+                        th Описание
+                        th Цена
+                        th Действие
+                tbody
+                    -var j=1;
+                    each lot in lots
+                        -j++;
+                        tr
+                            td=servers[lot.server]
+                            -if(lp.sides.length>0)
+                                td=sides[lot.side]
+                            -if(lp.races.length>0)
+                                td=races[lot.race]
+                            -if(lp.classes.length>0)
+                                td=classes[lot.class]
+                            -if(lp.custom_fields.length>0)
+                                each cf in lp.custom_fields
+                                    -if(lot._customs[cf._id])
+                                        td=lot._customs[cf._id].value
+                            td=lot.short_desc
+                            td=lot.price
+                                | &nbsp;
+                                i.fa.fa-rub
+                            td
+                                form(method='post', action='./trade/delete', id='lot-manage')
+                                    input(type='hidden', name='lot_id', value=lot._id)
+                                    input(type='hidden', name='_csrf', value=_csrf)
+                                    .btn-group
+                                        input.btn.btn-default(type="button", value="Изменить", data-toggle="modal", data-target="#myModal"+j)
+                                        input.btn.btn-danger(type="button", value="Удалить" , onclick='confirmDelete(this)')
+
+    .row.justify-content-center
+        if lots.length > 0
+            .col-md-3
+                button(data-url='/lots/'+lp._id+'/trade/push-up')#push-lots.btn.btn-lg.btn-info
+                    i.fa.fa-arrow-up
+                    | Поднять предложения
+            .col-md-3
+                button(data-toggle="modal", data-target="#myModal1").btn.btn-lg.btn-success
+                    i.fa.fa-plus
+                    |Добавить предложение
+        else
+            .col-md-3
+                button(data-toggle="modal", data-target="#myModal1").btn.btn-lg.btn-success
+                    i.fa.fa-plus
+                    | Добавить предложение
+
+    -var i = 1;
+    each lot in lots
+        -i++;
+        .modal.fade(id="myModal"+i, tabindex='-1', role='dialog', aria-labelledby="myModalLabel")
+            .modal-dialog(role='document')
+                .modal-content
+                    form(method='post')
+                        .modal-header
+                            h4(id='myModalLabel'+i).modal-title Изменить предлоожение
+                            button.close(data-dismiss='modal', aria-label="Close")
+                                span(aria-hidden="true") &times;
+                        .modal-body.dynamic-input
+                            .form-horizontal
+                                -if (lp.servers.length>0)
+                                    .form-group
+                                        label.col-sm-3.control-label Сервер
+                                        .col-sm-9
+                                            select.form-control(name='offer[1][server]')
+                                                each server in lp.servers
+                                                    option(value=server._id, selected=server._id == lot.server.toString())=server.name
+                                -if (lp.sides.length>0)
+                                    .form-group
+                                        label.col-sm-3.control-label Сторона
+                                        .col-sm-9
+                                            select.form-control(name='offer[1][side]')
+                                                each side in lp.sides
+                                                    option(value=side._id, selected=side._id == lot.side.toString())=side.name
+                                -if (lp.races.length>0)
+                                    .form-group
+                                        label.col-sm-3.control-label Раса
+                                        .col-sm-9
+                                            select.form-control(name='offer[1][race]')
+                                                each race in lp.races
+                                                    option(value=race._id, selected=race._id == lot.race.toString())=race.name
+                                -if (lp.classes.length>0)
+                                    .form-group
+                                        label.col-sm-3.control-label Классы
+                                        .col-sm-9
+                                            select.form-control(name='offer[1][class]')
+                                                each _class in lp.classes
+                                                    option(value=_class._id, selected=_class._id == lot.class.toString())=_class.name
+                                -if (lp.custom_fields.length>0)
+                                    each _cf in lp.custom_fields
+                                        .form-group
+                                            label.col-sm-3.control-label=_cf.name
+                                            .col-sm-9
+                                                -if(_cf.ftype == "text")
+                                                    input.form-control(name='offer[1][cf][' + _cf._id + ']', value=lot._customs[_cf._id].value)
+                                                -if(_cf.ftype == "list")
+                                                    select.form-control(name='offer[1][cf][' + _cf._id + ']')
+                                                        each option in _cf.list
+                                                            option(value=option, selected=option == lot._customs[_cf._id].value)=option
+                                .form-group
+                                    label.col-sm-3.control-label Краткое описание
+                                    .col-sm-9
+                                        input.form-control(name='offer[1][short_desc]', maxlength=128, value=lot.short_desc, required)
+                                .form-group
+                                    label.col-sm-3.control-label Описание
+                                    .col-sm-9
+                                        textarea.form-control(name='offer[1][description]', rows=5, required)
+                                            =lot.description
+                                .form-group
+                                    label.col-sm-3.control-label Цена
+                                    .col-sm-9
+                                        input.number.form-control(name='offer[1][price]', type='text', placeholder='10.0', value=lot.price, required, pattern="[0-9\,\.]*")
+                        .modal-footer
+                            input(type='hidden', name='lot_id', value=lot._id)
+                            input(type='hidden', name='_csrf', value=_csrf)
+                            button.btn.btn-default(data-dismiss="modal") Закрыть
+                            input.btn.btn-success(type="submit", value="Сохранить")
+
+
+
+    .modal.fade(id="myModal1", tabindex='-1', role='dialog', aria-labelledby="myModalLabel")
+        .modal-dialog(role='document')
+            .modal-content
+                form(method='post')
+                    .modal-header
+                        h4#myModalLabel.modal-title Добавить предлоожение
+                        button.close(data-dismiss='modal',aria-label="Close")
+                            span(aria-hidden="true") &times;
+
+                    .modal-body.dynamic-input
+                        .form-horizontal
+                            -if (lp.servers.length>0)
+                                .form-group
+                                    label.col-sm-3.control-label Сервер
+                                    .col-sm-9
+                                        select.form-control(name='offer[1][server]')
+                                            each server in lp.servers
+                                                option(value=server._id)=server.name
+                            -if (lp.sides.length>0)
+                                .form-group
+                                    label.col-sm-3.control-label Сторона
+                                    .col-sm-9
+                                        select.form-control(name='offer[1][side]')
+                                            each side in lp.sides
+                                                option(value=side._id)=side.name
+                            -if (lp.races.length>0)
+                                .form-group
+                                    label.col-sm-3.control-label Раса
+                                    .col-sm-9
+                                        select.form-control(name='offer[1][race]')
+                                            each race in lp.races
+                                                option(value=race._id)=race.name
+                            -if (lp.classes.length>0)
+                                .form-group
+                                    label.col-sm-3.control-label Классы
+                                    .col-sm-9
+                                        select.form-control(name='offer[1][class]')
+                                            each _class in lp.classes
+                                                option(value=_class._id)=_class.name
+                            -if (lp.custom_fields.length>0)
+                                each _cf in lp.custom_fields
+                                    .form-group
+                                        label.col-sm-3.control-label=_cf.name
+                                        .col-sm-9
+                                            -if(_cf.ftype == "text")
+                                                input.form-control(name='offer[1][cf][' + _cf._id + ']')
+                                            -if(_cf.ftype == "list")
+                                                select.form-control(name='offer[1][cf][' + _cf._id + ']')
+                                                    each option in _cf.list
+                                                      option(value=option)=option
+                            .form-group
+                                label.col-sm-3.control-label Краткое описание
+                                .col-sm-9
+                                    input.form-control(name='offer[1][short_desc]',maxlength=200, required)
+                            .form-group
+                                label.col-sm-3.control-label Описание
+                                .col-sm-9
+                                    textarea.form-control(name='offer[1][description]',rows=5, required)
+                            .form-group
+                                label.col-sm-3.control-label Цена
+                                .col-sm-9
+                                    input.number.form-control(name='offer[1][price]', type='text', placeholder='10.0', required, pattern="[0-9\,\.]*")
+                    .modal-footer
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        button.btn.btn-default(data-dismiss="modal") Закрыть
+                        input.btn.btn-success(type="submit", value="Добавить")

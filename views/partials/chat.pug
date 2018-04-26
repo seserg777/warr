@@ -1,0 +1,34 @@
+.row.chat
+    .col-md-12
+        .card
+            .card-header
+                h3.panel-title
+                    a(href='#') Чат
+            .card-body
+                .messages.personal(style='height: 333px;', data-name =(chat.chatter != null) ? chat.chatter.name : null, data-id=(chat.chatter != null) ? chat.chatter.id : null, id=(chat != null) ? "chat-"+chat._id : "")
+                    if(chat)
+                        each message in chat.messages
+                            .message
+                                .head
+                                    .user
+                                        span.fa.fa-user
+                                        if message.isSystem
+                                            a(href='/') Play4Pay
+                                            |&nbsp;
+                                            span.badge.badge-info оповещение
+                                        else if message.sender.isAdmin
+                                            a(href='/users/' + message.sender._id)= message.sender.username
+                                            | &nbsp;
+                                            span.badge.badge-primary сотрудник
+                                        else
+                                            a(href='/users/' + message.sender._id)= message.sender.username
+                                    -var time = moment(message.updated).format('DD MMMM, HH:mm:ss');
+                                    .time.float-md-right=time
+                                if message.isSystem
+                                    .body.system-message!=message.message
+                                else
+                                    .body!=message.message
+                .controls
+                    .form-group
+                        textarea#chat-message.form-control(name='content', rows='3', placeholder='Введите сообщение (Shift+Enter для перехода на след. строку)', data-id=(chat.chatter.id != null) ? chat.chatter.id : null)
+                    button.btn.btn-default(onclick='chat.send(this)') Отправить

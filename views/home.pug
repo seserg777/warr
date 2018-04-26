@@ -1,0 +1,78 @@
+extends layout
+block title
+    title Play4Pay — биржа игровых ценностей
+block content
+    .bs-callout.bs-callout-info
+        h4
+            | Вам повезло посетить главную биржу рунета - Play4Play.ru!
+        p
+            | Здесь вы найдете все, что искали в сфере онлайн игр, в любом количестве и по выгодной именно для вас цене. Наши клиенты - это наши партнеры, поэтому мы гарантирует безопасность, быстроту сделки и качество полученной услуги! А главное Вы сами выбираете когда, с кем и по какой цене совершить выгодный обмен!
+    .page-header
+        h1 Покупайте у игроков!
+    .row.align-items-start
+        .col-md-12.games-list
+            -var lastChar = '0';
+            each game in games
+                div
+                    div.game-entry
+                        if(lastChar != game.title[0].toUpperCase())
+                            -lastChar=game.title[0].toUpperCase()
+                            div.game-char= lastChar
+
+                        p.game-title
+                            if(user && user.isAdmin)
+                                a(href='/game/edit/' + game._id).fa.fa-pencil-square-o
+                            if(game.childrens[0])
+                                a(href = '/' + game.childrens[0].childType + '/' + game.childrens[0].id)=game.title
+                            else
+                                a(href = '#')=game.title
+                            sup=' '+game.localization.join(', ')
+                        p.game-items
+                            each child,index in game.childrens
+                                a(href = '/' + child.childType + '/' + child.id)=child.childName
+                                if(index < game.childrens.length-1)
+                                    span ,&nbsp;
+                            if(user && user.isAdmin)
+                                span ,&nbsp;
+                                a(href='/game/'+game._id+'/pages/add')
+                                    i.fa.fa-plus-square-o
+    .row.justify-content-center.align-items-end
+        .col-md-4
+            if(user && user.isAdmin)
+                .col-md-2.col-md-offset-5
+                    a.btn.btn-lg.btn-success(href='/game/add')
+                        i.fa.fa-plus
+                        | &nbsp;Добавить игру
+                    br
+    .row.margin-top2
+        .col-md-12.chat#home-chat
+            .card
+                .card-header
+                    h4.card-title Чат
+                .card-body
+                    .messages.scrollbox(style='height: 333px;')
+
+                    .md-form.input-group
+                        if (user)
+                            input(placeholder='Ваше сообщение').form-control#chat-text-input
+                        else
+                            input(placeholder='Для отправки сообщений вам нужно войти', disabled='disabled').form-control#chat-text-input
+                        span.input-group-btn
+                            if (user)
+                                button.btn.btn-default#chat-send-btn
+                                    i.fa.fa-paper-plane
+                                    | Отправить
+                            else
+                                button(disabled='disabled').btn.btn-default#chat-send-btn
+                                    i.fa.fa-paper-plane
+                                    | Отправить
+    p.margin-top2.lead Последние блоги
+    .row
+        each blog in blogs
+            .col-3
+                .card
+                    .card-body
+                        h4.card-title=blog.title
+                        h6.card-subtitle.mb-2.text-muted=blog.hdate
+                        p.card-text=blog.body_main_page
+                        a.card-link(href="/blog/"+blog.human_id) Читать

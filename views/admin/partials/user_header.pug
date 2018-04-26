@@ -1,0 +1,55 @@
+h1.page-header=User.username
+    if(User.isAdmin)
+        | &nbsp;
+        small
+            span.badge.badge-success сотрудник
+.row
+    .col-md-5
+        a.btn.btn-default(href='/chat?user=' + User._id) Отправить сообщение
+a(href=adminPage+'/users')
+    i.fa.fa-arrow-left
+    | Вернутся к списку пользователей
+.row.margin-bottom-md
+    .col-md-6
+        | Зарегистрирован&nbsp;
+        =regDates.Date
+        | &nbsp;в&nbsp;
+        =regDates.Time
+        span.gray-light &nbsp;(
+            =regDates.DateFromNow
+            | )
+    .col-md-6
+        if(lastactive > 15)
+            | Последний раз был на сайте&nbsp;
+            =lastDates.Date
+            | &nbsp;в&nbsp;
+            =lastDates.Time
+            span.gray-light &nbsp;(
+                =lastDates.DateFromNow
+                | )
+        else
+            | Пользователь онлайн!
+
+if inviter
+    .row
+        .col-md-6
+            p Пригласил
+                a(href=adminPage + '/user/' + inviter._id)=' '+inviter.username
+
+hr
+ul.nav.nav-tabs.margin-bottom-sm
+    li.nav-item
+        a.nav-link(href=adminPage + '/user/'+User._id class=(menuCode == 800) ? 'active' : undefined) Активные продажи
+    li.nav-item
+        a.nav-link(href=adminPage + '/user/'+User._id+'/deals-history' class=(menuCode == 801) ? 'active' : undefined) История сделок
+    li.nav-item
+        a.nav-link(href=adminPage + '/user/' + User._id + '/chats' class=(menuCode == 802) ? 'active' : undefined) Чаты
+    li.nav-item
+        a.nav-link(href=adminPage + '/user/' + User._id + '/purses' class=(menuCode == 803) ? 'active' : undefined) Кошельки
+    li.nav-item
+        a.nav-link(href=adminPage + '/user/' + User._id + '/reviews' class=(menuCode == 804) ? 'active' : undefined) Отзывы
+    li.nav-item
+        a.nav-link(href=adminPage + '/user/' + User._id + '/operations' class=(menuCode == 805) ? 'active' : undefined) Денежные операции
+    if User.referral.enabled
+        li.nav-item
+            a.nav-link(href=adminPage + '/user/' + User._id + '/partner' class=(menuCode == 808) ? 'active' : undefined) Партнёрка

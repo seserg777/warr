@@ -1,0 +1,190 @@
+extends ../../layout
+
+
+block content
+    -var isMeSeller = (user._id.toString() === order._seller._id.toString())
+    -var isMeBuyer = (user._id.toString() === order._payeer._id.toString())
+    .page-header
+        h1 Заказ ##{order.order_id}&nbsp;
+            if(order.status == 4)
+                small
+                    span.badge.badge-danger Закрыт
+            else if(order.status == 6)
+                small
+                    span.badge.badge-info Возврат
+    .row
+        .col-md-2
+            b.text-muted Продавец
+        .col-md-3
+            p
+                a(href='/users/'+order._seller._id)=order._seller.username
+                | &nbsp;
+                if order._seller.isOnline
+                    label.badge.badge-success online
+                else
+                    if order._seller.isInTouch
+                        label.badge.badge-info на связи
+                    else
+                        label.badge.badge-danger offline
+    .row
+        .col-md-2
+            b.text-muted Сумма
+        .col-md-4
+            if(isMeBuyer)
+                p=order.sum.toFixed(2)
+                    | &nbsp;
+                    | #{order.paymentSystem.currency} (#{order.paymentSystem.title})
+            else
+                p=order.release_sum.toFixed(2)
+                    | &nbsp;
+                    | #{order.paymentSystem.currency} (#{order.paymentSystem.title})
+    .row
+        .col-md-2
+            b.text-muted Игра
+        .col-md-4
+            p=order._game.title
+    if(order.type == 'chip')
+        .row
+            .col-md-2
+                b.text-muted Валюта
+            .col-md-3
+                p=order._chip_page.currency
+    .row
+        .col-md-2
+            b.text-muted Сервер
+        .col-md-4
+            p=order._server.name
+    if(order._side)
+        .row
+            .col-md-2
+                b.text-muted Сторона
+            .col-md-4
+                p=order._side.name
+    if(order._race)
+        .row
+            .col-md-2
+                b.text-muted Расса
+            .col-md-4
+                p=order._race.name
+    if(order._class)
+        .row
+            .col-md-2
+                b.text-muted Класс
+            .col-md-4
+                p=order._class.name
+    if(order.type == 'chip')
+        .row
+            .col-md-2
+                b.text-muted Кол-во валюты
+            .col-md-3
+                p=order.sell_count
+                    | &nbsp;
+                    =order._chip_page.currency_sell_sufix
+                    | &nbsp;
+                    =order._chip_page.currency_plural
+    if(order.type == 'lot')
+        .row
+            .col-md-2
+                b.text-muted Описание
+            .col-md-4
+                p=order.lot.description
+        if(order._lot_page.custom_fields)
+            each cf in order.lot.customs
+                .row
+                    .col-md-2
+                        b.text-muted=cf.title
+                    .col-md-4
+                        p=cf.value
+
+    .row
+        .col-md-2
+            b.text-muted Открыт
+        .col-md-4
+            p=openDates.Date
+                | &nbsp;в&nbsp;
+                =openDates.Time
+                span.gray-light &nbsp;(
+                    =openDates.DateFromNow
+                    | )
+    -if(order.status == 4)
+        .row
+            .col-md-2
+                b.text-muted Закрыт
+            .col-md-4
+                p=closeDates.Date
+                    | &nbsp;в&nbsp;
+                    =closeDates.Time
+                    span.gray-light &nbsp;(
+                        =closeDates.DateFromNow
+                        | )
+
+    -if((isMeBuyer || user.isAdmin ) && order.status == 3)
+        .row.margin-bottom-lg
+            .col-md-5
+                form(method='post', action=user.isAdmin ? '/order/close?confirm=1': '/order/close')#offer-form.offer-form.recive-confirm
+                    input(type='hidden', name='oid', value=order._id)
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    button.btn.btn-primary Подтвердить получение
+    -if((isMeSeller || user.isAdmin ) && (order.status == 3 || order.status == 4))
+        .row.margin-bottom-lg
+            .col-md-5
+                form(method='post', action=user.isAdmin ? '/order/close?refund=1': '/order/close').offer-form
+                    input(type='hidden', name='oid', value=order._id)
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    button.btn.btn-danger Вернуть деньги покупателю
+    -if(isMeBuyer && order.status == 1)
+        .row.margin-bottom-lg
+            .col-md-5
+                form(method='post', action='/order/pay').offer-form
+                    input(type='hidden', name='oid', value=order._id)
+                    input(type='hidden', name='_csrf', value=_csrf)
+                    button.btn.btn-primary Оплатить
+    -if(isMeSeller && (order.status == 1 || order.status == 5 ))
+        .row.margin-bottom-lg
+            .col-md-5
+                input(type='hidden', name='oid', value=order._id)
+                h4 Ожидаем оплаты заказа покупателем.
+    -if(order.status == 6)
+        .row.margin-bottom-lg
+            .col-md-5
+                input(type='hidden', name='oid', value=order._id)
+                h4 Средства возвращены покупателю
+    -if(order.status == 7)
+        .row.margin-bottom-lg
+            .col-md-5
+                input(type='hidden', name='oid', value=order._id)
+                h4 Оплачен, ожидает проверки сотрудником
+    -if(isMeBuyer && order.status == 5)
+        .row.margin-bottom-lg
+            .col-md-5
+                input(type='hidden', name='oid', value=order._id)
+                button(disabled).btn.btn-primary.wating-for-payment-system Ожидание подтвержения платёжной системы...
+
+    include ../../partials/chat
+    if isMeBuyer && order.status == 4
+        .row.comment
+            .col-md-12
+                form#send-comment
+                    .form-group
+                        h3 Отзыв для продавца
+                        textarea(placeholder="Ваш отзыв будет виден всем в профиле продовца.")#comment-text.form-control=comment ? comment.message : ""
+                    button#smd(type='button', data-post='/order/'+order._id+'/comment').btn.btn-default Отправить
+                    .form-group
+                    .form-group
+                        label Ответ продавца
+                        p(class=(comment && comment.reply !="") ? "" : "text-muted")=(comment && comment.reply !="") ? comment.reply : "Отсутствует."
+    if isMeSeller
+        .row.comment
+            .col-md-12
+                form#send-comment
+                    .form-group
+                        h3 Отзыв покупателя
+                        p(class=comment ? "" : "text-muted")=comment ? comment.message : "Отсутствует."
+        if comment && comment.message
+            .row.comment
+                .col-md-12
+                    form#send-comment
+                        .form-group
+                            h3 Ваш ответ покупателю
+                            textarea(placeholder="Вы можете ответить публично на отзыв покупателя.")#comment-text.form-control=comment.reply ? comment.reply : ""
+                        button#smd(type='button', data-post='/order/' + order._id + '/comment').btn.btn-default Отправить

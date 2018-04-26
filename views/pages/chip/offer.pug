@@ -1,0 +1,87 @@
+extends ../../layout
+
+
+block content
+    .page-header
+        h1 Оформление заказа
+    .bs-callout.bs-callout-info
+        h4 Обратите внимание
+        p Перед покупкой настоятельно рекомендуем связатся с продавцом в чате ниже и уточнить сроки и способ доставки.
+    .row
+        .col-md-1
+            b.text-muted Продавец
+        .col-md-3
+            span
+                a(href='/users/'+offer._owner._id)=offer._owner.username
+                | &nbsp;
+                if offer._owner.isOnline
+                    label.badge.badge-success online
+                else
+                    if offer._owner.isInTouch
+                        label.badge.badge-info на связи
+                    else
+                        label.badge.badge-danger offline
+    .row
+        .col-md-1
+            b.text-muted Игра
+        .col-md-4
+            p=offer._game.title
+    .row
+        .col-md-1
+            b.text-muted Валюта
+        .col-md-2
+            p=offer._chip_page.currency
+    .row
+        .col-md-1
+            b.text-muted Сервер
+        .col-md-4
+            p=offer._server.name
+    if(offer._side)
+        .row
+            .col-md-1
+                b.text-muted Сторона
+            .col-md-4
+                p=offer._side.name
+    .row
+        .col-md-1
+            b.text-muted Наличие
+        .col-md-2
+            p=numeral(offer.count).format('0,0').replace(/,/g,' ')
+                | &nbsp;
+                =offer._chip_page.currency_sell_sufix
+                | &nbsp;
+                =offer._chip_page.currency_plural
+    .row.margin-bottom-lg
+        .col-md-5
+            form(method='post')#offer-form.offer-form
+                .form-group
+                    label(for='payment-method') Способ оплаты:
+                    select(name='paymentMethod').form-control#payment-method
+                        each method in methods
+                            option(data-price=method.price_per_one, data-currency=method.currency_title, value=method._id)=method.title2
+                .clearfix.row
+                    .pull-left.col-md-6
+                        .form-group
+                            label(for='ipay') Заплачу:
+                            .input-group
+                                input.number(name='ipay', value=ipay)#ipay.form-control
+                                span#vault-sufix.input-group-addon
+                    .pull-left.col-md-1
+                        label
+                        i.fa.fa-exchange(style='font-size:1.6em;color:#e2e2e2; margin:10px 0 0 -5px;')
+                    .pull-left.col-md-5
+                        .form-group
+                            label(for='irecive') Получу:
+                            .input-group
+                                input.number(name='irecive')#irecive.form-control
+                                span.input-group-addon=offer._chip_page.currency_sell_sufix
+                .form-group
+                    label(for='charname') Имя персонажа:
+                    input(name='charname', value=nick, required=true)#charname.form-control
+                input(type='hidden', name='chip_id', value=offer._id)
+                input(type='hidden', name='_csrf', value=_csrf)
+                button.btn.btn-primary Купить
+
+    if(offer._owner._id.toString() !== user._id.toString())
+        include ../../partials/chat
+    include ../../partials/reviews

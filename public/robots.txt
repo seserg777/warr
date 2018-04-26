@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /*trade
+Disallow: /?partner=
+Host: https://play4play.ru/
+Sitemap: https://play4play.ru/sitemap.xml

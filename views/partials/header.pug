@@ -1,0 +1,75 @@
+.navbar.navbar-expand-sm.navbar-light.bg-light.fixed-top
+    .container
+        a.navbar-brand(href='/')
+            i.fa.fa-shopping-cart
+            | Play4Play
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
+            span.navbar-toggler-icon
+        .collapse.navbar-collapse#navbarNav
+            ul.navbar-nav
+                li.nav-item
+                    a.nav-link(href='/' class=(menuCode == 103) ? 'active' : undefined) Список игр
+                if user
+                    li.nav-item
+                        a.nav-link(href='/orders/purchases' class=(menuCode == 104) ? 'active' : undefined) Мои покупки
+                            span#myorders-counter.d-none.badge.badge-success=user.counters.myorders
+                    li.nav-item
+                        a.nav-link(href='/orders/sales' class=(menuCode == 105) ? 'active' : undefined) Мои продажи
+                            span#payorders-counter.d-none.badge.badge-success=user.counters.payorders
+                    li.nav-item
+                        a.nav-link(href='/chat' class=(menuCode == 106) ? 'active' : undefined) Сообщения
+                            span#messages-counter.d-none.badge.badge-success=user.counters.unread.length
+                    li.nav-item
+                        a.nav-link(href='/account' class=(menuCode == 100) ? 'active' : undefined) Кабинет
+                li.nav-item.dropdown
+                    a.nav-link.dropdown-toggle#navbarHelpMenuLink(href='#', data-toggle="dropdown", aria-haspopup="true", aria-expanded="false") Помощь
+                        span.caret
+                    ul.dropdown-menu(aria-labelledby="navbarDropdownMenuLink")
+                        li.dropdown-item
+                            a(href='/help') Вопросы и ответы
+                        li.dropdown-item
+                            a(href='/payer-qa') FAQ покупателя
+                        li.dropdown-item
+                            a(href='/seller-qa') FAQ продавца
+                        li.dropdown-item
+                            a(href='/arbitrage') Решение споров
+                        li.dropdown-item
+                            a(href='/rules') Правила для продавцов
+                        li.dropdown-item
+                            a(href='/partner-system') Партнёрская программа
+                li.nav-item
+                    a.nav-link(href='/blog' class=(menuCode == 108) ? 'active' : undefined) Блог
+            ul.nav.navbar-nav.ml-auto
+                if !user
+                    li.nav-item
+                        a.nav-link(href='/login' class=(menuCode == 102) ? 'active' : undefined) Войти
+                    li.nav-item
+                        a.nav-link(href='/signup' class=(menuCode == 101) ? 'active' : undefined) Зарегистрироваться
+                    li.nav-item
+                        a.nav-link(href='/auth/vkontakte')
+                            i.text-muted.fa.fa-vk(style='font-size:1.4em')
+                else
+                    if user.isAdmin
+                        li.nav-item
+                            a.nav-link(href='/stats' class=(menuCode >= 900) ? 'active' : undefined)
+                                i.fa.fa-bar-chart
+                        li.nav-item
+                            a.nav-link(href='/admin1337' class=( menuCode >= 800 && menuCode < 900) ? 'active' : undefined)
+                                i.fa.fa-cogs
+                    li.nav-item
+                        a.nav-link(href='/users/' + user._id)
+                            |#{user.username || user.email || user.id}
+                    li.nav-item
+                        a.nav-link#logout(href='javascript:void(0)')
+                            i.fa.fa-sign-out(style='font-size:1.4em')
+
+if user && user.isAdmin
+    div.affix.balances Балансы
+        | &nbsp; WMR:
+        span.wmr-balance  0
+        | &nbsp; QIWI:
+        span.qiwi-balance  0
+        | &nbsp; Yandex:
+        span.yandex-balance  0
+        | &nbsp; Play4Pay:
+        span.play4play-balance  0

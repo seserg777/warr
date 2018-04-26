@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    .row
+        .col-md-12
+            if(reviews)
+                each review in reviews
+                    .panel.panel-default
+                        .panel-heading
+                            =review.time
+                            | &nbsp;
+                            =review.subject
+                            a.pull-md-right.text-danger(href='remove-review/'+review._id) УДАЛИТЬ КОММЕНТАРИЙ
+                        .panel-body
+                            p.text-info=review.from.username+":"
+                            =review.message
+                        if(review.reply && review.reply != "")
+                            .panel-footer
+                                p.text-info ответ продавца:
+                                =review.reply
+
+            else
+                p
+                    | Отзывы отстствуют.

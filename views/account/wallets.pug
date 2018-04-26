@@ -1,0 +1,63 @@
+extends ../layout
+
+block content
+    include partials/header
+    .page-header
+        h2 Кошельки
+    -var i = 0;
+    form(method='POST')
+        if wallets
+            for wallet in wallets
+                if(wallet)
+                    .row
+                        .col-md-5
+                            .form-group.multiple-form-group(class=wallet.error ? "has-error": "")
+                                .input-group
+                                    .input-group-btn.input-group-select
+                                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                                            span.concept Webmoney WMR&nbsp;
+                                            span.caret
+                                        ul.dropdown-menu.dropdown-cf(role='menu')
+                                            li
+                                                a.webmoneyDropDown(href='#webmoney') Webmoney WMR&nbsp;
+                                            li
+                                                a.yandexDropDown(href='#yandex') Yandex.Money&nbsp;
+                                            li
+                                                a.qiwiDropDown(href='#qiwi') QIWI&nbsp;
+
+                                        input.input-group-select-val.field-type(type='hidden', name="custom_fields[" + i + "][ftype]", value=wallet.ftype)
+                                    input.form-control.field-name(type='text', name="custom_fields[" + i + "][name]", placeholder='Кошелек', value=wallet.name)
+
+                                    span.input-group-btn
+                                        button.btn.btn-danger.btn-remove-cf(type='button')
+                                            i.fa.fa-minus
+                                if(wallet.error)
+                                    span.help-block.has-success=wallet.error
+
+                - i++;
+        .row
+            .col-md-5
+                .form-group.multiple-form-group.input-group
+                    .input-group-btn.input-group-select
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                            span.concept Webmoney WMR&nbsp;
+                            span.caret
+                        ul.dropdown-menu.dropdown-cf(role='menu')
+                            li
+                                a(href='#webmoney') Webmoney WMR&nbsp;
+                            li
+                                a(href='#yandex') Yandex.Money&nbsp;
+                            li
+                                a(href='#qiwi') QIWI&nbsp;
+
+                        input.input-group-select-val.field-type(type='hidden', name="custom_fields[" + i + "][ftype]", value='webmoney')
+                    input.form-control.field-name(type='text', name="custom_fields[" + i + "][name]", placeholder='Кошелек')
+                    span.input-group-btn
+                        button.btn.btn-success.btn-add-cf(type='button')
+                            i.fa.fa-plus
+        .row
+            .col-md-3
+                input(type="hidden", name="_csrf", value=_csrf)
+                input(type="submit", value="Сохранить").btn.btn-primary
+block scripts
+    script(src='/js/pages/edit.js')

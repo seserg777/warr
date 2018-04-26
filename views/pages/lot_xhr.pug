@@ -1,0 +1,30 @@
+table#lot-results-table.table.table-condensed.table-hover.results-table
+    thead
+        tr
+            th Сервер
+            -if(lp.sides && lp.sides.length > 0)
+                th Сторона
+            th Продавец
+            th Краткое описание
+            th Цена
+    tbody
+        each lot in lots
+            if lot.show
+                tr.offer-row(data-link="/lots/offer/"+lot._id)
+                    td=servers[lot.server]
+                        -if(lp.sides && lp.sides.length > 0)
+                            td=sides[lot.side]
+                    td=lot._owner.username
+                        | &nbsp;
+                        if lot._owner.isOnline
+                            label.badge.badge-success online
+                        else
+                            if lot._owner.isInTouch
+                                label.badge.badge-info на связи
+                            else
+                                label.badge.badge-danger offline
+                        .text-muted На сайте #{lot._owner._createdAt}
+                    td=lot.short_desc
+                    td=lot.price2
+                        | &nbsp;
+                        i.fa.fa-rub

@@ -1,0 +1,72 @@
+extends ../layout
+
+block content
+    include partials/header
+    .page-header
+        h3 Защитите ваш аккаунт
+    .row.margin-bottom-md.justify-content-center
+        .col-md-12
+            p.lead Для того что-бы полностью защитить ваш аккаунт от взлома мы настоятельно рекомендуем использовать Google Authenticator.
+    .row.margin-bottom-md.justify-content-center
+        .col-md-3
+            a.btn.btn-default(href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2")
+                i.fa.fa-android.text-success
+                | Скачать для Android
+        .col-md-3
+            a.btn.btn-default(href="https://itunes.apple.com/ru/app/google-authenticator/id388497605")
+                i.fa.fa-apple.text-muted
+                | Скачать для iOS
+    .row.margin-bottom-md.justify-content-center
+        .col-md-8
+            p.lead После чего сканируйте QR-код ниже, и ввидите 6 цифр в текстовое поле.
+    .row.justify-content-center
+        .col-md-3
+            !=qrcode
+            p.text-muted Код: #{secret}
+        .col-md-4
+            form.form-horizontal(action='/account/setup2a', method='POST')
+                input(type='hidden', name='_csrf', value=_csrf)
+                .form-group
+                    label.col-sm-3.control-label(for='code') Код
+                    .col-sm-7
+                        input.form-control(type='text', name='code', id='code' placeholder='6 Цифр', required, pattern='[0-9]{6}')
+                .form-group
+                    .col-sm-offset-3.col-sm-4
+                        if (user.otp.enabled)
+                            button.btn.btn-danger(type='submit')
+                                i.fa.fa-lock
+                                | Выключить
+                        else
+                            button.btn.btn-success(type='submit')
+                                i.fa.fa-lock
+                                | Включить
+    .page-header
+        h3 Изменить пароль
+
+    form.form-horizontal(action='/account/password', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group.row
+            label.col-sm-3.control-label(for='password') Новый пароль
+            .col-sm-7
+                input.form-control(type='password', name='password', id='password')
+        .form-group.row
+            label.col-sm-3.control-label(for='confirmPassword') Новый пароль еще раз
+            .col-sm-7
+                input.form-control(type='password', name='confirmPassword', id='confirmPassword')
+        .form-group.row
+
+            .col-sm-offset-3.col-sm-4
+                button.btn.btn-primary(type='submit')
+                    i.fa.fa-lock
+                    | Изменить пароль
+
+    .page-header
+        h3 Подключение социальных аккаунтов
+    .form-horizontal
+        .form-group
+            .col-sm-offset-3.col-sm-4
+                if user.vkontakte
+                    p: a.text-danger(href='/account/unlink/vkontakte') Отключить вход через ВК
+                else
+                    p: a(href='/auth/vkontakte') Подключить вход через Вконтакте
+

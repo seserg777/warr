@@ -1,0 +1,39 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    .chat.row
+        div.col-md-3
+            .panel.panel-default.panel-bookmarks
+                .panel-heading
+                    h3.panel-title Последние
+                .panel-body
+                    ul.nav.nav-pills.nav-stacked.bookmarks
+                        each _chat in chats
+                            li(data-id=_chat._id)
+                                a(href=adminPage +"/user/" + User._id+'/chats?user=' + _chat.chatter.id)
+                                    if _chat.hasNewEntries == false
+                                        .name=_chat.chatter.name
+                                    else
+                                        strong.name='* ' + _chat.chatter.name
+                        li( class="active")
+                            a(href=adminPage + "/user/" + User._id + '/chats?global=1')
+                                .name Главная страница
+        div.col-md-9
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title
+                       | Сообщения пользователя #{User.username} на Главной странице
+                .panel-body
+                    .messages.personal(style='height: 333px;', data-name =(_user != null) ? _user.username : null, data-id=(_user != null) ? _user._id.toString() : null, id=(chat != null) ? "chat-" + chat._id : "", data-chat=(chat != null) ? "" + chat._id : "")
+                        if(globalchats && globalchats.length)
+                            each entry in globalchats
+                                .message
+                                    .head
+                                        .user
+                                            span.fa.fa-user
+                                            a(href='/users/' + User._id)= User.username
+                                        -var time = moment(entry.createdAt).format('DD MMMM, HH:mm:ss');
+                                        .time.pull-right=time
+                                    .body!=entry.message
+

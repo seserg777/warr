@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+  .col-sm-8.col-sm-offset-2
+    form(method='POST')
+      legend Reset Password
+      input(type='hidden', name='_csrf', value=_csrf)
+      .form-group
+        label(for='password') Новый пароль
+        input.form-control(type='password', name='password', id='password', placeholder='Придумайте новый пароль', autofocus, required)
+      .form-group
+        label(for='confirm') Повтор нового пароля
+        input.form-control(type='password', name='confirm', id='confirm', placeholder='Введите новый пароль ещё раз', required)
+      .form-group
+        button.btn.btn-primary.btn-reset(type='submit')
+          i.fa.fa-keyboard-o
+          | Установить пароль

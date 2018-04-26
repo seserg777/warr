@@ -1,0 +1,47 @@
+extends ../layout
+block stylesheets
+    script(src='https://www.google.com/recaptcha/api.js')
+block content
+    .page-header
+        h3 Регистрация
+    form.form-horizontal(id='signup-form', method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group.row.justify-content-md-center
+            label.col-sm-2.control-label.text-sm-right(for='email') Имя
+            .col-sm-5
+                input.form-control(type='text', name='username', id='username', placeholder='Имя пользователя (латиница без пробелов)', autofocus, required, pattern="[a-zA-Z0-9]{4,20}", title="Никнейм должен содержать буквы латинского алфавита или цифры и быть более 4х символов.")
+        .form-group.row.justify-content-md-center
+            label.col-sm-2.control-label.text-sm-right(for='email') Почта
+            .col-sm-5
+                input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
+        .form-group.row.justify-content-md-center
+            label.col-sm-2.control-label.text-sm-right(for='password') Пароль
+            .col-sm-5
+                input.form-control(type='password', name='password', id='password', placeholder='Пароль', required)
+        .form-group.row.justify-content-md-center
+            label.col-sm-2.control-label.text-sm-right(for='confirmPassword') Пароль ещё раз
+            .col-sm-5
+                input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Повторите пароль', required)
+        if need_promo
+            .form-group.row.justify-content-md-center
+                label.col-sm-2.control-label.text-sm-right(for='promo') Код приглашения
+                .col-sm-5
+                    input.form-control(type='text', name='promo', id='promo', placeholder='Промо код', required, pattern="[a-zA-Z0-9]{4,8}", title="Код приглашения должен содержать буквы латинского алфавита и быть более 4х символов.")
+        .from-group.row.justify-content-md-center
+            label.col-sm-2.control-label
+            .col-sm-5.margin-bottom-md
+                .g-recaptcha(data-sitekey='6Lcj6B8UAAAAABHzhbZwkiUEJT_TgkSf0FclMTMD')
+        .form-group.row.justify-content-md-center
+            .offset-sm-2.col-sm-5
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-user-plus
+                    | Зарегистрироваться
+        .form-group.row.justify-content-md-center
+            .col-sm-offset-2.col-sm-6
+                hr.hr-text(data-content='ИЛИ')
+        .form-group.row.justify-content-md-center
+            .col-sm-5
+                a.btn.btn-block.btn-dark.btn-social(href='/auth/vkontakte')
+                    | Зарегистрироватся через
+                    =" "
+                    i.fa.fa-vk

@@ -1,0 +1,10 @@
+table.table.table-hover
+    thead
+        tr
+            th Способ оплаты
+            th Цена
+    tbody
+        each method in methods
+            tr
+                td=method.title
+                td=method.price.toFixed(2)

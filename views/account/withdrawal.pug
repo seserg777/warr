@@ -1,0 +1,46 @@
+.modal-dialog(role='document')
+    .modal-content
+        form(action='/account/withdrawal', method='POST')
+            .modal-header
+                h4.modal-title Вывод денег
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+            .modal-body
+                .form-group
+                    label Валюта
+                        p.form-control-static.currency
+                            if type == "webmoney"
+                                | Webmoney WMR
+                            else if type == "qiwi"
+                                | QIWI
+                            else if type == "yandex"
+                                | Yandex.Money
+                .form-group
+                    label Счет
+                    .input-group
+                        input.form-control(type="text", name="purse", value=(wallets[type] && wallets[type].length > 0) ? wallets[type][0] : "")
+                        if wallets[type] && wallets[type].length > 0
+                            .input-group-btn
+                                button.btn.btn-default.dropdown-toggle(data-toggle="dropdown", aria-expanded="false")
+                                    span.caret
+                                ul.dropdown-menu.dropdown-menu-right.select-purse(role="menu")
+                                    for purse in wallets[type]
+                                        li
+                                            a(href='javascript:void(0)', data-value=purse)=purse
+                .form-group
+                    label Сумма
+                    .input-group
+                        input.form-control(type="number", name="sum")
+                        if(type == "webmoney")
+                            span.input-group-addon WMR
+                        else
+                            span.input-group-addon ₽
+            .modal-footer
+                input(type='hidden', name='type', value=type)
+                input(type='hidden', name='_csrf', value=_csrf)
+                button.btn.btn-primary(type='submit') Создать заявку
+                button.btn.btn-default(type="button", data-dismiss='modal') Отмена
+script.
+    $('.select-purse li a').on('click', function(){
+        $(this).parent().parent().parent().parent().find('input').val($(this).data('value'));
+    });

@@ -1,0 +1,67 @@
+extends ../layout
+block stylesheets
+    link(rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css')
+block scripts
+    script(src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-ru-RU.min.js')
+block content
+    h2 Управление заказами
+    include partials/header
+
+    table.table.table-bordered(data-toggle="table", data-sort-stable=true, data-sort-name="ID")
+        thead
+            th ID
+            th Тип
+            th Продавец
+            th Покупатель
+            th Сумма
+            th Прибыль
+            th Реф-бэк
+            th Платёжка
+            th Дата
+            th Статус
+        tbody
+            each order in orders
+                tr
+                    td
+                        a(href="/order/"+order._id)=order.order_id
+                    td
+                        if(order.type=='chip')
+                            | Валюта
+                        else
+                            | Услуги
+                    td
+                        a(href=adminPage+'/user/'+order._seller._id)
+                            =order._seller.username
+                    td
+                        a(href=adminPage+'/user/' + order._payeer._id)
+                            =order._payeer.username
+
+                    td=order.sum.toFixed(2)
+                        i.fa.fa-rub
+                    td=(order.sum-order.release_sum).toFixed(2)
+                        i.fa.fa-rub
+                    td=order.ref_back.toFixed(2)
+                        i.fa.fa-rub
+                    td=order.paymentSystem.title
+                    td=moment(order.updatedAt).format("DD.MM.YYYY HH:mm")
+                    td
+                        -if(order.status == 1)
+                            | не оплачен
+                        -if(order.status == 2)
+                            | отменён
+                        -if(order.status == 3)
+                            | оплачен
+                        -if(order.status == 4)
+                            | закрыт
+                        -if(order.status == 5)
+                            | оплачиватеся
+                        -if(order.status == 6)
+                            | вовзрат
+    .row
+        .col-md-8.col-md-offset-2
+            nav(aira-label="Page navigation")
+                ul.pagination
+                    -for (var i = 1; i <= (count+limit)/limit; ++i)
+                        li.page-item(class=(page == i ? "active" : ""))
+                            a.page-link(href=adminPage + '/orders/' + i)=i

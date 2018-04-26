@@ -1,0 +1,22 @@
+extends ../layout
+block scripts
+    script(src='/js/game/add.js')
+block content
+    hr.hr-text(data-content="Добавить игру")
+    form(method='POST', action='/game/add')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+            label(for="gameName") Имя игры
+            input.form-control(id='gameName', name='gameName', placeholder='Lineage II')
+        .form-group
+            label(for="locales") Локализации
+            select.form-control(id="locales", name="locales[]", multiple='multiple')
+              option RU
+              option EU
+              option US
+              option NA
+              option Free
+              option Xbox
+              option PS4
+
+        button.btn.btn-default(type='submit') Сохранить

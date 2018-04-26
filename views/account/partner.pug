@@ -1,0 +1,66 @@
+extends ../layout
+
+block content
+    include partials/header
+    .registration-end
+        h2 Партнёрская программа
+        p.lead Партнерская программа, позволит получить до 50% от прибыли от сайта.
+    if user.referral.enabled === false
+        .registration-end
+                a.btn.btn-success(href='/account/partner/enable') Включить партнёрскую программу
+    else
+        .row
+            .col-md-6
+                h4 Ваша ссылка:
+                    .form-group.has-success(style='margin-top:20px')
+                        input.form-control(style='display:inline-block;width:222px', onclick='this.select();document.execCommand("copy");$(this).tooltip("show")', value='https://play4play.ru/?index='+user.promo, readonly=true, data-placement="top" title="Скопировано в буффер обмена")
+            .col-md-6
+                h4.margin-bottom-md Ваш промо код приглашения:
+                    .form-group.has-success(style='margin-top:20px')
+                        input.form-control(style='display:inline-block;width:66px', onclick='this.select();document.execCommand("copy");$(this).tooltip("show")', value=user.promo, readonly=true, data-placement="top" title="Скопировано в буффер обмена")
+                p
+                    span.text-danger Внимание!
+                    | &nbsp;
+                    | Для того что-бы пользователи регистрировались по вашему коду, пригласите их на
+                    | &nbsp;
+                    span.badge.badge-success Play4Play.ru
+                    | &nbsp;
+                    | без
+                    | &nbsp;
+                    span.badge.badge-primary www.
+                    | &nbsp;
+                    | в начале, или воспользуйтесь ссылкой.
+                    | &nbsp;
+        .row
+            .col-md-4
+                table.table.table-striped#refferal-widthdraw
+                    tr
+                        th Ваш реферальный баланс
+                        td
+                            span#ref-balance=user.referral.balance.toFixed(2)
+                            i.fa.fa-rub
+                    tr
+                        th
+                            select#ref-withdrawl-ps.form-control
+                                option(value='x') Выберите кошелек
+                                option(value='webmoney') WebMoney
+                                option(value='yandex') Я.Деньги
+                                option(value='qiwi') QIWI
+                        td
+                            button#btn-ref-widthraw.btn.btn-default Вывод
+            .col-md-5.offset-md-2
+                table.table.table-bordered
+                    tr
+                        th Кол-во регистраций
+                        td=user.referral.registrations
+                    tr
+                        th Кол-во сделок
+                        td=user.referral.deals
+                    tr
+                        th Сумма сделок
+                        td=user.referral.deals_sum.toFixed(2)
+                    tr
+                        th Всего заработано
+                        td=user.referral.bonus_sum.toFixed(2)
+
+

@@ -1,0 +1,92 @@
+extends ../layout
+block meta
+        meta(name='description', content= (cp.seo_meta) ? cp.seo_meta : "У нас вы можете купить "+cp.title +" для " + cp._game.title + " напрямую у игроков по самым низким ценам!" )
+        meta(name='keywords', content=(cp.seo_tags) ? cp.seo_tags : "Купить "+cp.title+", продам "+cp.title+", "+cp.title+" для "+cp._game.title+ " купить у игроков, "+cp._game.title)
+block content
+    .page-header
+        h1
+            | #{cp.currency} #{cp._game.title}
+            if cp._game.localization.length
+                | (#{cp._game.localization.join(', ')})
+    if(ref_bonus + cp.ref_commission > 0 )
+        h4.float-md-right.promo-deal
+            a(href='/partner-system') Получайте #{ref_bonus + cp.ref_commission}% от прибыли сайта
+    ul.nav.nav-tabs
+        each page in cp._game.childrens
+            li.nav-item()
+                a.nav-link(href='/'+page.childType+'/'+page.id, class= (page.id == cp.chip_id && page.childType == 'chips') ? 'active' : '')= page.childName
+
+    .row.filters
+        .col-md-7
+            form.form-inline
+                -if(cp.servers && cp.servers.length > 0)
+                    .form-group
+                        label(for='server') Сервер
+                        select#server.form-control
+                            option(value='') Любой
+                            each server in cp.servers
+                                option(value=server._id)=server.name
+                -if(cp.sides && cp.sides.length > 0)
+                    .form-group
+                        label(for='side') Сторона
+                        select#side.form-control
+                            option(value='') Любая
+                            each side in cp.sides
+                                option(value=side._id)=side.name
+                .form-group.checkbox
+                    input#onlineOnly(type='checkbox')
+                    label(for='onlineOnly') Продавец&nbsp;
+                        span.badge.badge-success Online
+        .col-md-5
+            if user && user.isAdmin
+                .btn-group.pull-right
+                    a(href='/chips/'+cp.chip_id+'/edit').btn.btn-light Изменить
+                    button(onclick='swal({title:"Удалить эту страницу?",text:"После подтврждения эта страница будет полностью удалена со всеми предложениями!",type:"warning",showCancelButton:true,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Подтвердить",cancelButtonText:"Отмена"}).then(function () {location.href="/chips/'+cp.chip_id+'/delete"},function(){})').btn.btn-danger Удалить
+                    a(href='/chips/'+cp.chip_id+'/trade').btn.btn-primary.pull-right Продать #{cp.title.toLowerCase()}
+            else
+                a(href='/chips/'+cp.chip_id+'/trade').btn.btn-primary.pull-right Продать #{cp.title.toLowerCase()}
+    .row
+        .col-md-12
+            table#results-table.table.table-condensed.table-hover.results-table
+                thead
+                    tr
+                        th Сервер
+                        -if(cp.sides && cp.sides.length > 0)
+                            th Сторона
+                        th Продавец
+                        th Наличие
+                        th Цена
+                            |  за
+                            |&nbsp;
+                            =cp.currency_sell_count
+                            |&nbsp;
+                            =cp.currency_sell_sufix
+                tbody
+                    each chip in chips
+                        if chip.show
+                            tr.offer-row(data-link="/chips/offer/"+chip._id)
+                                td=servers[chip.server_id]
+                                -if(cp.sides && cp.sides.length > 0)
+                                    td=sides[chip.side_id]
+                                td=chip._owner.username
+                                    | &nbsp;
+                                    if chip._owner.isOnline
+                                        label.badge.badge-success online
+                                    else
+                                        if chip._owner.isInTouch
+                                            label.badge.badge-info на связи
+                                        else
+                                            label.badge.badge-danger offline
+                                    if( chip._owner.deals_count && chip._owner.deals_count > 0 )
+                                        .text-muted На сайте #{chip._owner._createdAt}, Сделок: #{chip._owner.deals_count}, Отзывов: #{chip._owner.comments.length}
+                                    else
+                                        .text-muted На сайте #{chip._owner._createdAt}
+                                td=numeral(chip.count).format('0,0').replace(/,/g,' ')
+                                    | &nbsp;
+                                    =cp.currency_sell_sufix
+                                td=chip.price.toFixed(2)
+                                    | &nbsp;
+                                    i.fa.fa-rub
+    .row
+        .col-md-12
+            div!=cp.description

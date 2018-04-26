@@ -1,0 +1,117 @@
+extends ../layout
+
+block content
+    include partials/header
+    .page-header.withdrawal-page
+        h2 Баланс
+    .bs-callout.bs-callout-info
+        | Средства которые находятся на балансе также можно использовать для оплаты заказа выбрав соответствующую платёжную систему. При нехватки средств будет выставлен счет на недостающую сумму.
+    .row.lead(style='display:flex;align-items:center;')
+        .col-md-1.col-xs-2
+            img(src='/images/webmoney.png', width='60px')
+        .col-md-3.col-xs-4
+            | Webmoney WMR
+        .col-md-2.col-xs-3=balances.webmoney.toFixed(2)
+            | &nbsp;WMR
+        if user.isSeller
+            .col-md-2.col-xs-3
+                label(for='acceptWM')  приём
+                | &nbsp;
+                input(type='checkbox', id="acceptWM", checked=accepting.webmoney).payment-accept-switch
+        .col-md-2.col-xs-3
+            button#withdraw-webmoney.btn.btn-default-outline(data-remote="/account/withdrawal/webmoney", data-toggle="ajaxModal", data-target=".withdrawal-webmoney") вывести
+    .row.lead(style='display:flex;align-items:center;')
+        .col-md-1.col-xs-2
+            img(src='/images/yandex.png', width='60px')
+        .col-md-3.col-xs-4
+            | Я.Деньги
+        .col-md-2.col-xs-3=balances.yandex.toFixed(2)
+            | &nbsp;₽
+        if user.isSeller
+            .col-md-2.col-xs-3
+                label(for='acceptYandex')  приём
+                | &nbsp;
+                input(type='checkbox', id="acceptYandex", checked=accepting.yandex).payment-accept-switch
+        .col-md-2.col-xs-3
+            button#withdraw-yandex.btn.btn-default-outline(data-remote="/account/withdrawal/yandex", data-toggle="ajaxModal", data-target=".withdrawal-webmoney") вывести
+    .row.lead(style='display:flex;align-items:center;')
+        .col-md-1.col-xs-2
+            img(src='/images/qiwi.png', width='60px')
+        .col-md-3.col-xs-4
+            | QIWI
+        .col-md-2.col-xs-3=balances.qiwi.toFixed(2)
+            | &nbsp;₽
+        if user.isSeller
+            .col-md-2.col-xs-3
+                label(for='acceptQiwi')  приём
+                | &nbsp;
+                input(type='checkbox', id="acceptQiwi", checked=accepting.qiwi).payment-accept-switch
+        .col-md-2.col-xs-3
+            button#withdraw-qiwi.btn.btn-default-outline(data-remote="/account/withdrawal/qiwi", data-toggle="ajaxModal", data-target=".withdrawal-webmoney") вывести
+    .row.lead(style='display:flex;align-items:center;')
+        .col-md-1.col-xs-2
+            img(src='/images/play4play.png', width='60px')
+        .col-md-3.col-xs-4
+            | Play4Pay
+            |&nbsp;
+            i#play4play-balance-tooltip.small.fa.fa-info-circle(data-toggle="tooltip", data-placement="top", title="Баланс используется для бонусной программы и партнерских систем.")
+        .col-md-2.col-xs-3=balances.play4play.toFixed(2)
+            | &nbsp;₽
+
+    .row
+        .col-md-3
+            h2 Операции
+    .row
+        .col-md-12
+            table.table.table-hover
+                thead
+                    tr
+                        th операция
+                        th платёжная система
+                        th сумма
+                        th дата
+                        th(style='width:12%;') статус
+                tbody
+                    -var i = operations.length
+                    while i>=0
+                        -i--;
+                        -op=operations[i];
+                        if op
+                            tr
+                                td
+                                    =op.subject
+                                td
+                                    case op.ps
+                                        when 'Webmoney'
+                                            | WebMoney
+                                        when 'Balance'
+                                            | Баланс сайта
+                                        when 'Yandex.Money'
+                                            | Я.Деньги
+                                        default
+                                            =op.ps
+
+                                td(class=op.type=='in'? "" : "text-danger")
+                                    =op.type=='in'? "+" : "-"
+                                    |&nbsp;
+                                    =op.sum.toFixed(2)
+                                    i.fa.fa-rub
+                                td
+                                    =moment(op.date).format('DD MMM, в HH:mm')
+                                td
+                                    case op.status
+                                        when 'refunded'
+                                            i.fa.fa-undo
+                                            | Возврат
+                                        when 'pending'
+                                            i.fa.fa-clock-o
+                                            | Ожидает
+                                        when 'success'
+                                            i.fa.fa-check-circle-o
+                                            | Проведена
+                                        when 'canceled'
+                                            i.fa.fa-ban
+                                            | Отменена
+                                        when 'refund'
+                                            i.fa.fa-undo
+                                            | Возврат

@@ -1,0 +1,456 @@
+
+@import "themes/default/variables";
+@import "lib/bootstrap/bootstrap";
+@import "lib/bootstrap-social";
+@import "lib/font-awesome/font-awesome";
+@import "lib/switchery";
+@import "lib/phones";
+@import "lib/sweetalert";
+@import "lib/mdb/mdb";
+@import "themes/default/default";
+
+
+.margin-bottom-xs {margin-bottom: ceil($line-height-computed / 4);}
+.margin-bottom-sm {margin-bottom: ceil($line-height-computed / 2);}
+.margin-bottom-md {margin-bottom: $line-height-computed;}
+.margin-bottom-lg {margin-bottom: ceil($line-height-computed * 2);}
+.margin-bottom-br {margin-bottom: ceil($line-height-computed * 3);}
+
+
+// Scaffolding
+// -------------------------
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  padding-top: 75px;
+  margin-bottom: 75px;
+}
+.registration-end {
+  padding: 40px 15px;
+  text-align: center;
+}
+.balances {
+  text-align: center;
+  border: 1px solid rgba(95, 95, 95, 0.15);
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1029;
+  border-top: none;
+  width: 25%;
+  border-radius: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  left: 0;
+  right: 0;
+  margin-top: -30px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 45px;
+  line-height: 45px;
+
+  p, ul {
+    margin-bottom: 0;
+  }
+}
+.system-message {
+  border-left: 4px solid #5bc0de;
+  padding-left: 5px;
+}
+// Input Fields
+// -------------------------
+
+textarea {
+  resize: vertical;
+}
+.label2 {
+  display: inline;
+  padding: 0.2em 0.4em .1em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: text-top;
+  border-radius: 2.25em;
+  margin-left: 0.2em;
+}
+// Navbar
+// -------------------------
+
+.navbar-nav img {
+  width: 30px;
+  height: 30px;
+  margin: -15px 15px -15px;
+}
+
+// Alerts
+// -------------------------
+
+.alert {
+  margin-top: 20px;
+}
+
+// Thumbnails
+// -------------------------
+
+.thumbnail {
+  padding: 0;
+  border-radius: 0;
+  box-shadow: 0 0 5px #ccc, inset 0 0 0 #000;
+}
+
+// Font Icons
+// -------------------------
+.swal2-radio {
+  label {
+    font-weight: normal;
+
+  }
+  text-align: left;
+}
+.swal2-modal {
+  .swal2-content {
+    font-size: 17px;
+    text-align: left;
+  }
+  #recptcha2 {
+    margin-left: 75px;
+  }
+}
+.fa {
+  margin-right: 6px;
+}
+
+.fa-rub {
+  font-size: 13px;
+  margin-left: 3px;
+}
+
+
+.gray-light {
+  color: $gray-light;
+}
+
+//checkboxes fix
+@media (min-width: 768px) {
+  .form-inline .radio input[type="radio"],
+  .form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 5px;
+  }
+}
+
+.low-padding {
+  padding-left: 7px;
+}
+.scrollbox {
+  background:
+          /* Shadow covers */
+          linear-gradient(white 30%, rgba(255,255,255,0)),
+          linear-gradient(rgba(255,255,255,0), white 70%) 0 100%;
+  background:
+          /* Shadow covers */
+          linear-gradient(white 30%, rgba(255,255,255,0)),
+          linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+
+            /* Shadows */
+          radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+          radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+  background-repeat: no-repeat;
+  background-color: white;
+  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+
+  /* Opera doesn't support this in the shorthand */
+  background-attachment: local, local, scroll, scroll;
+}
+
+
+/* Tabs panel */
+
+.tabbable-panel {
+  border: 1px solid #eee;
+  padding: 10px;
+}
+
+/* Default mode */
+
+.tabbable-line > {
+  .nav-tabs {
+    border: none;
+    margin: 0px;
+    > li {
+      margin-right: 2px;
+      > a {
+        border: 0;
+        margin-right: 0;
+        color: #737373;
+        > i {
+          color: #a6a6a6;
+        }
+      }
+      &.open, &:hover {
+        border-bottom: 4px solid #fbcdcf;
+      }
+      &.open > a, &:hover > a {
+        border: 0;
+        background: none !important;
+        color: #333333;
+      }
+      &.open > a > i, &:hover > a > i {
+        color: #a6a6a6;
+      }
+      &.open .dropdown-menu, &:hover .dropdown-menu {
+        margin-top: 0px;
+      }
+      &.active {
+        border-bottom: 4px solid #f3565d;
+        position: relative;
+        > a {
+          border: 0;
+          color: #333333;
+          > i {
+            color: #404040;
+          }
+        }
+      }
+    }
+  }
+  .tab-content {
+    margin-top: -3px;
+    background-color: #fff;
+    border: 0;
+    border-top: 1px solid #eee;
+    padding: 15px 0;
+  }
+}
+
+.portlet .tabbable-line > .tab-content {
+  padding-bottom: 0;
+}
+
+/* Below tabs mode */
+
+.tabbable-line.tabs-below > {
+  .nav-tabs > li {
+    border-top: 4px solid transparent;
+    > a {
+      margin-top: 0;
+    }
+    &:hover {
+      border-bottom: 0;
+      border-top: 4px solid #fbcdcf;
+    }
+    &.active {
+      margin-bottom: -2px;
+      border-bottom: 0;
+      border-top: 4px solid #f3565d;
+    }
+  }
+  .tab-content {
+    margin-top: -10px;
+    border-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+  }
+}
+
+table {
+  th.price {
+    width: 25%;
+  }
+  th.delete {
+    width: 10%;
+  }
+  th.amount {
+    width: 25%;
+  }
+  th.server {
+    width: 20%;
+  }
+  th.side {
+    width: 25%;
+  }
+}
+
+.hr-text {
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+  &:before {
+    content: '';
+    // use the linear-gradient for the fading effect
+    // use a solid background color for a solid bar
+    background: linear-gradient(to right, transparent, #818078, transparent);
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+  }
+  &:after {
+    content: attr(data-content);
+    position: relative;
+    display: inline-block;
+    color: black;
+
+    padding: 0 .5em;
+    line-height: 1.5em;
+    // this is really the only tricky part, you need to specify the background color of the container element...
+    color: #818078;
+    background-color: #fcfcfa;
+  }
+}
+.results-table {
+  tbody {
+    tr.offer-row {
+      cursor: pointer;
+    }
+  }
+}
+
+.margin-top2 {
+  margin-top: 2em;
+}
+.games-list {
+  column-count: 4;
+  column-width: 200px;
+  -webkit-column-count: 4;
+  -moz-column-count: 4;
+
+  .game-entry {
+    display: inline-block;
+    position: relative;
+    padding: 0 0 10px 1.8em;
+
+  }
+  .game-char {
+    font-size: 1.26em;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #777;
+  }
+  .game-title {
+    font-size: 1.26em;
+    white-space: nowrap;
+    margin: 0;
+    a {
+      color: inherit;
+    }
+    sup {
+      color: $gray-light;
+    }
+  }
+
+  .game-items {
+    margin: 0;
+    * {
+      display: inline-block;
+    }
+  }
+
+
+}
+table.trade-table {
+   tbody td {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+
+
+.chat {
+  .panel-body {
+    padding: 10px 15px 15px 15px;
+    .controls {margin-top: 2em;}
+    .messages {
+      margin-top: -10px;
+      overflow-y: scroll;
+
+      .message {
+        .head {
+          margin-top: 1em;
+          .user {
+            color: $gray-light;
+          }
+          .adminDelete {
+            float: left;
+            padding-right: 10px;
+            font-size: 16px;
+            border: none;
+            background: none;
+          }
+        }
+        .time {
+          color: $gray-light;
+        }
+      }
+    }
+
+  }
+}
+
+
+.filters {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  .form-group {
+    margin-right: 1em;
+    label {
+      margin-right: 0.5em;
+    }
+  }
+}
+
+.dynamic-input {
+  .entry:not(:first-of-type) {
+    margin-top: 10px;
+  }
+}
+
+.bs-callout {
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid #eee;
+  border-left-width: 5px;
+  border-radius: 3px;
+  h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+}
+.bs-callout-danger {
+  border-left-color: #d9534f;
+  h4 {
+    color: #d9534f;
+  }
+}
+.bs-callout-warning {
+  border-left-color: #f0ad4e;
+  h4 {
+    color: #f0ad4e;
+  }
+}
+.bs-callout-info {
+  border-left-color: #5bc0de;
+  h4 {
+    color: #5bc0de;
+  }
+}
+

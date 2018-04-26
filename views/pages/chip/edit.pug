@@ -1,0 +1,137 @@
+extends ../../layout
+block scripts
+    script(src='/js/pages/edit.js')
+    script(src='/libs/summernote/summernote.min.js')
+block stylesheets
+    link(rel='stylesheet', href='/libs/summernote/summernote.css')
+block content
+    if cp
+        .page-header
+            h1
+                | #{cp.currency} #{cp._game.title} (#{cp._game.localization.join(', ')})
+        .tabbable-panel.margin-bottom-sm
+            .tabbable-line
+                ul.nav.nav-tabs
+                    each page in cp._game.childrens
+                        li(class= (page.id == cp.chip_id && page.childType == 'chips') ? 'active' : '')
+                            a(href='/' + page.childType + '/' + page.id+'/edit')= page.childName
+    else
+        hr.hr-text(data-content="Добавить страницу")
+    form(method='POST')
+        ul#pageTabs.nav.nav-tabs(role='tablist')
+            li.nav-item(role='main')
+                a.nav-link.active(href='#mainSettings',role='tab',aria-controls='mainSettings') Основные настройки
+            li.nav-item(role='main')
+                a.nav-link(href='#comissionSettings',role='tab',aria-controls='comissionSettings') Комиссии
+            li.nav-item(role='main')
+                a.nav-link(href='#textSettings',role='tab',aria-controls='textSettings') Текст
+            li.nav-item(role='main')
+                a.nav-link(href='#seoSettings',role='tab',aria-controls='seoSettings') СЕО
+        .tab-content
+            #mainSettings.tab-pane.active(role='tabpanel')
+                .row
+                    .col-md-6.col-sm-6.col-xs-12
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        input(type='hidden', name='id', value=cp.chip_id)
+                        input(type='hidden', name='gameType', value='coins')
+                        input(type='hidden', name='gid', value=cp._game._id)
+
+                        .form-group
+                            label.control-label.requiredField(for='title')
+                                | Имя ссылки
+                                span.asteriskField *
+                            input#title.form-control(name='title', placeholder='Например кинары', type='text', value=cp.title)
+
+
+                        .form-group
+                            label.control-label(for='valute') Валюта
+                            input#valute.form-control(name='currency', placeholder='Например адена', type='text', value=cp.currency)
+
+                        .form-group
+                            label.control-label(for='valute') Множественное число
+                            input#valute_plural.form-control(name='currency_plural', placeholder='Например аден', type='text', value=cp.currency_plural)
+
+                        .form-group
+                            label.control-label(for='price_for') Количество
+                            input#price_for.form-control(name='price_for',type='number', placeholder='За какое количество будет продаватся', value=cp.currency_sell_count)
+
+                        .form-group
+                            label.control-label(for='sufix') Суфикс
+                            input#sufix.form-control(name='sufix', placeholder='Например КК или золота', type='text', value=cp.currency_sell_sufix)
+
+
+                        #servers.form-group.dynamic-input
+                            label.control-label Серверы
+                                span.gray-light  (если есть)
+                            .controls
+                                each server in cp.servers
+                                    .entry.input-group
+                                        input.form-control(name='servers['+server._id+']', type='text', placeholder='Имя сервера', value=server.name)
+                                        span.input-group-btn
+                                            button.btn.btn-danger.btn-remove(type='button')
+                                                span.fa.fa-minus
+                                .entry.input-group
+                                    input.form-control(name='servers[]', type='text', placeholder='Имя сервера')
+                                    span.input-group-btn
+                                        button.btn.btn-success.btn-add(type='button')
+                                            span.fa.fa-plus
+                            small
+                                | Нажмите&nbsp;
+                                span.fa.fa-plus
+                                | для добавление нового сервера
+                            br
+
+                        #sides.form-group.dynamic-input
+                            label.control-label Стороны
+                                span.gray-light  (если есть)
+                            .controls
+                                each side in cp.sides
+                                    .entry.input-group
+                                        input.form-control(name='sides['+side._id+']', type='text', placeholder='Имя сервера', value=side.name)
+                                        span.input-group-btn
+                                            button.btn.btn-danger.btn-remove(type='button')
+                                                span.fa.fa-minus
+                                .entry.input-group
+                                    input.form-control(name='sides[]', type='text', placeholder='Имя стороны')
+                                    span.input-group-btn
+                                        button.btn.btn-success.btn-add(type='button')
+                                            span.fa.fa-plus
+                            small
+                                | Нажмите&nbsp;
+                                span.fa.fa-plus
+                                | для добавление нового сервера
+                            br
+            #textSettings.tab-pane(role='tabpanel')
+                .row
+                    .col-md-10
+                        label Текст:
+                            span.gray-light  (отображается внизу страницы)
+                        textarea#summernote(name='description')!=cp.description
+            #comissionSettings.tab-pane(role='tabpanel')
+                .row
+                    .col-md-6
+                        label Комиссия на раздел:
+                            span.gray-light  (в процентах, может быть отрицательным)
+                        input(name='commission' value=cp.commission, type='number').number
+                .row
+                    .col-md-6
+                        label Реферальная система:
+                            span.gray-light  (в процентах, может быть отрицательным)
+                        input(name='ref_commission' value=cp.ref_commission, type='number').number
+                .row.margin-bottom-md
+            #seoSettings.tab-pane(role='tabpanel')
+                .row
+                    .col-md-6
+                        .form-group
+                            label.control-label(for='page_title') Имя страницы в браузере
+                            input#page_title.form-control(name='page_title', placeholder='title', type='text', value=cp.page_title)
+                        .form-group
+                            label.control-label(for='seo_meta') Мета описание
+                            input#seo_meta.form-control(name='seo_meta', placeholder='description', type='text', value=cp.seo_meta)
+                        .form-group
+                            label.control-label(for='seo_tags') Мета ключевые слова
+                            input#seo_tags.form-control(name='seo_tags', placeholder='keywords', type='text', value=cp.seo_tags)
+        .row
+            .form-group
+                div
+                    button.btn.btn-primary(name='submit', type='submit') Сохранить

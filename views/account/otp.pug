@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    form.form-horizontal(id='signup-form', method='POST', data-toggle='validator', action='/check-otp')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+            label.col-sm-3.control-label(for='code')
+            .col-sm-7
+                input.form-control(type='text', name='code', id='code', placeholder='6 значный OTP код c Google Authenticator', autofocus, required, pattern='[0-9]{6}', title="Необходимы 6 цифр с Google Authenticator!")
+        .form-group
+            .col-sm-offset-3.col-sm-5
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-user-plus
+                    | Подтвердить
+            .col-sm-2
+                a.btn.btn-danger(href='/check-otp/cancel')
+                    i.fa.fa-user-plus
+                    | Отмена

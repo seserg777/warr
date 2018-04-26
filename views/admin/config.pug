@@ -1,0 +1,50 @@
+extends ../layout
+block content
+    h2 Управление сайтом
+    include partials/header
+    .row.margin-bottom-md
+    .row
+        .col-md-4
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Курсы валют (₽ за единицу валюты)
+                .panel-body
+                    form(action=adminPage+'/config',method='post').form-horizontal
+                        .form-group
+                            label.col-sm-2.control-label(for='dollarPrice') Доллар
+                            .col-sm-10
+                                .input-group
+                                    input#dollarPrice.form-control(placeholder='Amount',name='vaults[USD]',value=courses ? courses.value.USD : null)
+                                    .input-group-addon ₽
+                        .form-group
+                            label.col-sm-2.control-label(for='euroPrice') Евро
+                            .col-sm-10
+                                .input-group
+                                    input#euroPrice.form-control(placeholder='Amount',name='vaults[EUR]',value=courses ? courses.value.EUR : null)
+                                    .input-group-addon €
+                        .form-group
+                            label.col-sm-2.control-label(for='hryvnyaPrice') Гривна
+                            .col-sm-10
+                                .input-group
+                                    input#hryvnyaPrice.form-control(placeholder='Amount',name='vaults[UAH]',value=courses ? courses.value.UAH : null)
+                                    .input-group-addon ₴
+                        .form-group
+                            .col-sm-offset-2.col-sm-10
+                                button.btn.btn-default(type='submit') Сохранить
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        input(type='hidden', name='task', value="saveCourses")
+
+        .col-md-4
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Отключение сайта
+                .panel-body
+                    form(action=adminPage + '/toggle-off', method='post').form-horizontal
+                        .form-group
+                            .col-sm-offset-2.col-sm-10
+                                if global.site_enabled
+                                    button.btn.btn-danger(type='submit') Выключть
+                                else
+                                    button.btn.btn-success(type='submit') Включть
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        input(type='hidden', name='task', value="saveCourses")

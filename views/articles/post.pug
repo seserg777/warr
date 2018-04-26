@@ -1,0 +1,26 @@
+extends ../layout
+block content
+    .page-header
+        h1
+            | #{title}
+    form(method='POST',action='/blog/add')
+        input(type='hidden' name='_csrf' value=_csrf)
+        if (human_id && human_id != null)
+            input(type='hidden' name='human_id' value=human_id)
+        .form-group
+            label(for='blog_title') Заголовок
+            input.form-control.form-control-lg#blog_title(name='blog_title', value=article?article.title:undefined)
+        .form-group
+            label(for='shortdesc') Краткое содержание
+            textarea#shortdesc.form-control(name='short_description')=article ? article.body_short : undefined
+        .form-group
+            label(for='summernote31') Содержание на главной странице
+            textarea.form-control(name='main_page_description')=article ? article.body_main_page : undefined
+        .form-group
+            label(for='summernote31') Содержание
+            textarea#summernote31(name='description')=article?article.body:undefined
+        button.btn.btn-default=human_id ?'Изменить новость':  'Добавить новость'
+block stylesheets
+    link(rel='stylesheet', href='/libs/summernote/summernote.css')
+block scripts
+    script(src='/libs/summernote/summernote.min.js')

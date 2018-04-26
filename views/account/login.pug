@@ -1,0 +1,58 @@
+extends ../layout
+block stylesheets
+    script(src='https://www.google.com/recaptcha/api.js')
+block content
+    .page-header
+        h3 Вход
+    form(method='POST')
+        input(type='hidden', name='_csrf', value=_csrf)
+        if !credentials
+            .form-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='email') Email
+                .col-sm-6
+                    input.form-control(type='email', name='email', id='email', placeholder='Email', autofocus, required)
+            .form-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='password') Пароль
+                .col-sm-6
+                    input.form-control(type='password', name='password', id='password', placeholder='Пароль', required)
+            .from-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='recaptcha')
+                .col-sm-6.margin-bottom-md
+                    .g-recaptcha(data-sitekey='6Lcj6B8UAAAAABHzhbZwkiUEJT_TgkSf0FclMTMD')
+            .form-group.row.justify-content-md-center
+                .offset-sm-2.col-sm-6
+                    button.col-sm-2.btn.btn-primary(type='submit')
+                        i.fa.fa-user
+                        | Войти
+                    a.btn.btn-link(href='/forgot') Забыли ваш пароль?
+            .form-group.row.justify-content-md-center
+                .col-sm-7
+                    hr.hr-text(data-content='ИЛИ')
+            .form-group.row.justify-content-md-center
+                .col-sm-offset-3.col-sm-4
+                    a.btn.btn-block.btn-dark.btn-social(href='/auth/vkontakte')
+                        | Войти с помощью
+                        =" "
+                        i.fa.fa-vk.text-light
+        else
+            .form-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='email') Email
+                .col-sm-6
+                    input.form-control(type='email', name='email', id='email', placeholder='Email', required, value=credentials.login)
+            .form-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='password') Пароль
+                .col-sm-6
+                    input.form-control(type='password', name='password', id='password', placeholder='Пароль', required, value=credentials.password)
+            .form-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='code') Код с Google Authenticator
+                .col-sm-6
+                    input.form-control(type='text', name='code', id='code', placeholder='6 цифр', required, autofocus)
+            .from-group.row.justify-content-md-center.text-md-right
+                label.col-sm-2.control-label(for='recaptcha')
+                .col-sm-6.margin-bottom-md
+                    .g-recaptcha(data-sitekey='6Lcj6B8UAAAAABHzhbZwkiUEJT_TgkSf0FclMTMD')
+            .form-group.row.justify-content-md-center.text-md-right
+                .offset-sm-2.col-sm-6
+                    button.col-sm-2.btn.btn-primary(type='submit')
+                        i.fa.fa-user
+                        | Войти

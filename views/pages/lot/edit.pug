@@ -1,0 +1,253 @@
+extends ../../layout
+block scripts
+    script(src='/js/pages/edit.js')
+    script(src='/libs/summernote/summernote.min.js')
+block stylesheets
+    link(rel='stylesheet', href='/libs/summernote/summernote.css')
+block content
+    if lp
+        .page-header
+            h1
+                | #{lp._game.title} #{lp.title} (#{lp._game.localization.join(', ')})
+        .tabbable-panel.margin-bottom-sm
+            .tabbable-line
+                ul.nav.nav-tabs
+                    each page in lp._game.childrens
+                        li(class= (page.id == lp.lot_id && page.childType == 'lots') ? 'active' : '')
+                            a(href='/' + page.childType + '/' + page.id+'/edit')= page.childName
+    else
+        hr.hr-text(data-content="Добавить страницу")
+    form(method='POST')
+        ul#pageTabs.nav.nav-tabs(role='tablist')
+            li.nav-item(role='main')
+                a.nav-link.active(href='#mainSettings',role='tab',aria-controls='mainSettings') Основные настройки
+            li.nav-item(role='main')
+                a.nav-link(href='#comissionSettings',role='tab',aria-controls='comissionSettings') Комиссии
+            li.nav-item(role='main')
+                a.nav-link(href='#textSettings',role='tab',aria-controls='textSettings') Текст
+            li.nav-item(role='main')
+                a.nav-link(href='#seoSettings',role='tab',aria-controls='seoSettings') СЕО
+        .tab-content
+            #mainSettings.tab-pane.active(role='tabpanel')
+                .row
+                    .col-md-6.col-sm-6.col-xs-12
+                        input(type='hidden', name='_csrf', value=_csrf)
+                        input(type='hidden', name='id', value=lp.lot_id)
+                        input(type='hidden', name='gameType', value=lp.ptype)
+                        input(type='hidden', name='gid', value=lp._game._id)
+
+                        .form-group
+                            label.control-label.requiredField(for='title')
+                                | Имя ссылки
+                                span.asteriskField *
+                            input#title.form-control(name='title', placeholder='Например кинары', type='text', value=lp.title)
+
+
+                        #servers.form-group.dynamic-input
+                            label.control-label Серверы
+                                span.gray-light  (если есть)
+                            .controls
+                                each server in lp.servers
+                                    .entry.input-group
+                                        input.form-control(name='servers['+server._id+']', type='text', placeholder='Имя сервера', value=server.name)
+                                        span.input-group-btn
+                                            button.btn.btn-danger.btn-remove(type='button')
+                                                span.fa.fa-minus
+                                .entry.input-group
+                                    input.form-control(name='servers[]', type='text', placeholder='Имя сервера')
+                                    span.input-group-btn
+                                        button.btn.btn-success.btn-add(type='button')
+                                            span.fa.fa-plus
+                            small
+                                | Нажмите&nbsp;
+                                span.fa.fa-plus
+                                | для добавление нового сервера
+                            br
+
+                        #sides.form-group.dynamic-input
+                            label.control-label Стороны
+                                span.gray-light  (если есть)
+                            .controls
+                                each side in lp.sides
+                                    .entry.input-group
+                                        input.form-control(name='sides['+side._id+']', type='text', placeholder='Имя сервера', value=side.name)
+                                        span.input-group-btn
+                                            button.btn.btn-danger.btn-remove(type='button')
+                                                span.fa.fa-minus
+                                .entry.input-group
+                                    input.form-control(name='sides[]', type='text', placeholder='Имя стороны')
+                                    span.input-group-btn
+                                        button.btn.btn-success.btn-add(type='button')
+                                            span.fa.fa-plus
+                            small
+                                | Нажмите&nbsp;
+                                span.fa.fa-plus
+                                | для добавление нового сервера
+                            br
+
+                        #races.form-group.multi-accs.dynamic-input.multi-services
+                            label.control-label Расы
+                                span.gray-light  (если есть)
+                            .controls
+                                each race in lp.races
+                                    .entry.input-group
+                                        input.form-control(name='races['+race._id+']', type='text', placeholder='Имя расы', value=race.name)
+                                        span.input-group-btn
+                                            button.btn.btn-danger.btn-remove(type='button')
+                                                span.fa.fa-minus
+                                .entry.input-group
+                                    input.form-control(name='races[]', type='text', placeholder='Имя расы')
+                                    span.input-group-btn
+                                        button.btn.btn-success.btn-add(type='button')
+                                            span.fa.fa-plus
+                            small
+                                | Нажмите&nbsp;
+                                span.fa.fa-plus
+                                | для добавление новой расы
+                            br
+
+
+                        #classes.form-group.multi-accs.dynamic-input.multi-services
+                            label.control-label Классы
+                                span.gray-light  (если есть)
+                            .controls
+                                each _class in lp.classes
+                                    .entry.input-group
+                                        input.form-control(name='classes['+_class._id+']', type='text', placeholder='Имя класса', value=_class.name)
+                                        span.input-group-btn
+                                            button.btn.btn-danger.btn-remove(type='button')
+                                                span.fa.fa-minus
+                                .entry.input-group
+                                    input.form-control(name='classes[]', type='text', placeholder='Имя класса')
+                                    span.input-group-btn
+                                        button.btn.btn-success.btn-add(type='button')
+                                            span.fa.fa-plus
+                            small
+                                | Нажмите&nbsp;
+                                span.fa.fa-plus
+                                | для добавление нового класса
+                            br
+
+
+                    .col-md-6.col-sm-6.col-xs-12.multi.multi-accs.multi-services
+                        .contacts
+                            label Дополнительные поля:
+                            -var i = 1;
+                            each cf in lp.custom_fields
+                                .form-group.multiple-form-group.input-group(data-id="custom_fields["+cf._id+"]")
+                                    .input-group-btn.input-group-select
+                                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                                            span.concept Текстовое
+                                            span.caret
+                                        ul.dropdown-menu.dropdown-cf(role='menu')
+                                            li
+                                                a(href='#text', class='textDropDown') Текстовое
+                                            li
+                                                a(href='#desc', class='descDropDown') Описание
+                                            li
+                                                a(href='#list', class='listDropDown') Список
+
+                                        input.input-group-select-val.field-type(type='hidden', name="custom_fields["+cf._id+"][ftype]", value=cf.ftype)
+                                    input.form-control.field-name(type='text', name="custom_fields["+cf._id+"][name]", placeholder='Имя поля', value=cf.name)
+                                    .modal.fade(id="myModal"+i, tabindex='-1', role='dialog', aria-labelledby="myModalLabel")
+                                        .modal-dialog(role='document')
+                                            .modal-content
+                                                .modal-header
+                                                    h4#myModalLabel.modal-title Список
+                                                    button.close(data-dismiss='modal',aria-label="Close")
+                                                        span(aria-hidden="true") &times;
+                                                .modal-body.dynamic-input
+                                                    .controls
+                                                        each entry in cf.list
+                                                            .entry.input-group
+                                                                input.custom_field.form-control(name='custom_fields['+cf._id+'][list][]', type='text', placeholder='Элемент списка', value=entry)
+                                                                span.input-group-btn
+                                                                    button.btn.btn-danger.btn-remove-list(type='button')
+                                                                        span.fa.fa-minus
+                                                        .entry.input-group
+                                                            input.custom_field.form-control(name='custom_fields[' + cf._id + '][list][]', type='text', placeholder='Элемент списка')
+                                                            span.input-group-btn
+                                                                button.btn.btn-success.btn-add-list(type='button')
+                                                                    span.fa.fa-plus
+                                                .modal-footer
+                                                    button.btn.btn-default(data-dismiss="modal") Закрыть
+
+
+                                    span.input-group-btn
+                                        button.btn.btn-primary.btn-list-cf(type='button',data-toggle="modal", data-target="#myModal"+i, style='display:none;')
+                                            i.fa.fa-bars
+                                        button.btn.btn-danger.btn-remove-cf(type='button')
+                                            i.fa.fa-minus
+                                -i++;
+                            .form-group.multiple-form-group.input-group
+                                .input-group-btn.input-group-select
+                                    button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                                        span.concept Текстовое
+                                        span.caret
+                                    ul.dropdown-menu.dropdown-cf(role='menu')
+                                        li
+                                            a(href='#text') Текстовое
+                                        li
+                                            a(href='#desc') Описание
+                                        li
+                                            a(href='#list') Список
+
+                                    input.input-group-select-val.field-type(type='hidden', name="custom_fields["+i+"][ftype]", value='text')
+                                input.form-control.field-name(type='text', name="custom_fields[" + i + "][name]", placeholder='Имя поля')
+                                .modal.fade(id="myModal"+i, tabindex='-1', role='dialog', aria-labelledby="myModalLabel")
+                                    .modal-dialog(role='document')
+                                        .modal-content
+                                            .modal-header
+                                                h4#myModalLabel.modal-title Список
+                                                button.close(data-dismiss='modal',aria-label="Close")
+                                                    span(aria-hidden="true") &times;
+                                            .modal-body.dynamic-input
+                                                .controls
+                                                    .entry.input-group
+                                                        input.custom_field.form-control(name='custom_fields['+i+'][list][]', type='text', placeholder='Элемент списка')
+                                                        span.input-group-btn
+                                                            button.btn.btn-success.btn-add-list(type='button')
+                                                                span.fa.fa-plus
+                                            .modal-footer
+                                                button.btn.btn-default(data-dismiss="modal") Закрыть
+
+
+                                span.input-group-btn
+                                    button.btn.btn-primary.btn-list-cf(type='button',data-toggle="modal", data-target="#myModal"+i, style='display:none;')
+                                        i.fa.fa-bars
+                                    button.btn.btn-success.btn-add-cf(type='button')
+                                        i.fa.fa-plus
+            #comissionSettings.tab-pane(role='tabpanel')
+                .row
+                    .col-md-6
+                        label Комиссия на раздел:
+                            span.gray-light  (в процентах, может быть отрицательным)
+                        input(name='commission' value=lp.commission, type='number').number
+                .row
+                    .col-md-6
+                        label Реферальная система:
+                            span.gray-light  (в процентах, может быть отрицательным)
+                        input(name='ref_commission' value=lp.ref_commission, type='number').number
+                .row.margin-bottom-md
+            #textSettings.tab-pane(role='tabpanel')
+                .row
+                    .col-md-10
+                        label Текст:
+                            span.gray-light  (отображается внизу страницы)
+                        textarea#summernote(name='description')!=lp.description
+            #seoSettings.tab-pane(role='tabpanel')
+                .row
+                    .col-md-6
+                        .form-group
+                            label.control-label(for='page_title') Имя страницы в браузере
+                            input#page_title.form-control(name='page_title', placeholder='title', type='text', value=lp.page_title)
+                        .form-group
+                            label.control-label(for='seo_meta') Мета описание
+                            input#seo_meta.form-control(name='seo_meta', placeholder='description', type='text', value=lp.seo_meta)
+                        .form-group
+                            label.control-label(for='seo_tags') Мета ключевые слова
+                            input#seo_tags.form-control(name='seo_tags', placeholder='keywords', type='text', value=lp.seo_tags)
+        .row
+            .form-group
+                div
+                    button.btn.btn-primary(name='submit', type='submit') Сохранить

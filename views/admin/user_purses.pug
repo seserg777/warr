@@ -1,0 +1,77 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    form(method='post')
+        .row.lead(style='display:flex;align-items:center;')
+            .col-md-1.col-xs-2
+                img(src='/images/webmoney.png', width='60px')
+            .col-md-3.col-xs-4
+                | Webmoney WMR
+            .col-md-2.col-xs-2
+                |  ( #{balances.webmoney.toFixed(2)} WMR)
+            .col-md-2.col-xs-3
+                select.form-control(name='action[webmoney]')
+                    option(value='add') Добавить
+                    option(value='del') Забрать
+            .col-md-2.col-xs-3
+                input(type="hidden", name='_csrf', value=_csrf)
+                input(type="hidden", name='purse', value='webmoney')
+                input.form-control(name='balances[webmoney]')
+            .col-md-2.col-xs-3
+                button#withdraw-webmoney.btn.btn-default-outline(type='submit') применить
+    form(method='post')
+        .row.lead(style='display:flex;align-items:center;')
+            .col-md-1.col-xs-2
+                img(src='/images/yandex.png', width='60px')
+            .col-md-3.col-xs-4
+                | Yandex.Money
+            .col-md-2.col-xs-2
+                |  ( #{balances.yandex.toFixed(2)} р.)
+            .col-md-2.col-xs-3
+                select.form-control(name='action[yandex]')
+                    option(value='add') Добавить
+                    option(value='del') Забрать
+            .col-md-2.col-xs-3
+                input(type="hidden", name='_csrf', value=_csrf)
+                input(type="hidden", name='purse', value='yandex')
+                input.form-control(name='balances[yandex]')
+            .col-md-2.col-xs-3
+                button#withdraw-yandex.btn.btn-default-outline(type='submit') применить
+    form(method='post')
+        .row.lead(style='display:flex;align-items:center;')
+            .col-md-1.col-xs-2
+                img(src='/images/qiwi.png', width='60px')
+            .col-md-3.col-xs-4
+                | QIWI
+            .col-md-2.col-xs-2
+                |  ( #{balances.qiwi.toFixed(2)} р.)
+            .col-md-2.col-xs-3
+                select.form-control(name='action[qiwi]')
+                    option(value='add') Добавить
+                    option(value='del') Забрать
+            .col-md-2.col-xs-3
+                input(type="hidden", name='_csrf', value=_csrf)
+                input(type="hidden", name='purse', value='qiwi')
+                input.form-control(name='balances[qiwi]')
+            .col-md-2.col-xs-3
+                button#withdraw-qiwi.btn.btn-default-outline(type='submit') применить
+
+    form(method='post')
+        .row.lead(style='display:flex;align-items:center;')
+            .col-md-1.col-xs-2
+                img(src='/images/play4play.png', width='60px')
+            .col-md-3.col-xs-4
+                | Play4Play
+            .col-md-2.col-xs-2
+                |  ( #{balances.play4play.toFixed(2)} р.)
+            .col-md-2.col-xs-3
+                select.form-control(name='action[play4play]')
+                    option(value='add') Добавить
+                    option(value='del') Забрать
+            .col-md-2.col-xs-3
+                input(type="hidden", name='_csrf', value=_csrf)
+                input(type="hidden", name='purse', value='play4play')
+                input.form-control(name='balances[play4play]', value)
+            .col-md-2.col-xs-3
+                button#withdraw-play4play.btn.btn-default-outline(type='submit') применить

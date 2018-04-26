@@ -1,0 +1,45 @@
+extends ../layout
+block scripts
+    script(src='/js/game/edit.js')
+block content
+    hr.hr-text(data-content="Добавить игру")
+    form(method='POST')
+        input(type='hidden', name='id', value=game.id)
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+            label(for="gameName") Имя игры
+            input.form-control(id='gameName', name='gameName', placeholder='Lineage II', value=game.title)
+        .form-group
+            label(for="locales") Локализации
+            select.form-control(id="locales", name="locales[]", multiple='multiple' data-val=game.localization)
+              option RU
+              option EU
+              option US
+              option NA
+              option Free
+              option Xbox
+              option PS4
+
+        button.btn.btn-default(type='submit')
+          i.fa.fa-floppy-o
+          | Сохранить
+        span.float-md-right
+            a.btn.btn-danger(data-toggle="modal", data-target="#deleteConfirmation")
+              i.fa.fa-trash
+              | Удалить игру
+            a.btn.btn-success(href='/game/add')
+              i.fa.fa-plus
+              | Добавить новую
+
+    .modal.fade(tabindex='-1', role='dialog', id='deleteConfirmation')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            h4.modal-title Внимание
+            button.close(type='button', data-dismiss='modal', aria-label='Закрыть')
+                  span(aria-hidden='true') ×
+          .modal-body
+            p Вы действительно хотите удалить эту игру?
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Отмена
+            a.btn.btn-danger(type='button', href='/game/remove/'+game.id) Удалить

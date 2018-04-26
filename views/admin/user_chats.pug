@@ -1,0 +1,55 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    .chat.row
+        div.col-md-3
+            .card.panel-default.panel-bookmarks
+                .card-header
+                    h3.panel-title Последние
+                .card-body
+                    ul.nav.nav-pills.nav-stacked.bookmarks
+                        each _chat in chats
+                            li(data-id=_chat._id, class= (_chat.chatter.id == current_user_id) ? "active" : null)
+                                a(href=adminPage +"/user/" + User._id+'/chats?user=' + _chat.chatter.id)
+                                    if _chat.hasNewEntries == false
+                                        .name=_chat.chatter.name
+                                    else
+                                    strong.name='* ' + _chat.chatter.name
+                        li
+                            a(href=adminPage + "/user/" + User._id + '/chats?global=1')
+                                .name Главная страница
+        div.col-md-9
+            .card.panel-default
+                .card-header
+                    h3.panel-title
+                        a(href=(_user != null) ? adminPage+"/user/" + User._id+'/chats?user=' + _user._id  : "#" ) Чат
+                            =(_user != null) ? " с пользователем " + _user.username : null
+                .card-body
+                    .messages.personal(style='height: 333px;', data-name =(_user != null) ? _user.username : null, data-id=(_user != null) ? _user._id.toString() : null, id=(chat != null) ? "chat-" + chat._id : "", data-chat=(chat != null) ? "" + chat._id : "")
+                        if(chat)
+                            each message in chat.messages
+                                .message
+                                    .head
+                                        .user
+                                            span.fa.fa-user
+                                            if message.isSystem
+                                                a(href='/') Play4Pay
+                                                | &nbsp;
+                                                span.badge.badge-info оповещение
+                                            else if message.sender.isAdmin
+                                                a(href='/users/' + message.sender._id)= message.sender.username
+                                                | &nbsp;
+                                                span.badge.badge-primary сотрудник
+                                            else
+                                                a(href='/users/' + message.sender._id)= message.sender.username
+                                        -var time = moment(message.updated).format('DD MMMM, HH:mm:ss');
+                                        .time.pull-right=time
+                                    if message.isSystem
+                                        .body.system-message!=message.message
+                                    else
+                                        .body!=message.message
+                    .controls
+                        .form-group
+                            textarea#chat-message.form-control(name='content', rows='3', placeholder='Введите сообщение (Shift+Enter для перехода на след. строку)', autofocus='', data-id=(_user != null) ? _user._id.toString() : null, disabled=(_user == null))
+                        button.btn.btn-default(onclick='chat.send(this)', disabled=(_user == null)) Отправить

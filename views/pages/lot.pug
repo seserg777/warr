@@ -1,0 +1,114 @@
+extends ../layout
+block meta
+    if(lp.seo_meta)
+        meta(name='description', content=lp.seo_meta)
+    if(lp.seo_tags)
+        meta(name='keywords', content=lp.seo_tags)
+
+block content
+    .page-header
+        h1
+            | #{title}
+    if(ref_bonus + lp.ref_commission > 0 )
+        h4.float-sm-right.promo-deal
+            a(href='/partner-system') Получайте #{ref_bonus + lp.ref_commission}% от прибыли сайта
+    ul.nav.nav-tabs
+        each page in lp._game.childrens
+            li.nav-item
+                a.nav-link(href='/'+page.childType+'/'+page.id class= (page.id == lp.lot_id && page.childType == 'lots') ? 'active' : '')= page.childName
+
+    form#filtersForm
+        .row.filters.justify-content-between
+            .col-md-7
+                .form-inline
+                    -if(lp.servers && lp.servers.length > 0)
+                        .form-group
+                            label(for='server') Сервер
+                            select(data-name='server').sort-field#server.form-control
+                                option(value='') Любой
+                                each server in lp.servers
+                                    option(value=server._id)=server.name
+                    -if(lp.sides && lp.sides.length > 0)
+                        .form-group
+                            label(for='side') Сторона
+                            select(data-name='side').sort-field#side.form-control
+                                option(value='') Любая
+                                each side in lp.sides
+                                    option(value=side._id)=side.name
+                    .form-group.checkbox
+                        input(data-name='onlineOnly', type='checkbox').sort-field#onlineOnly
+                        label(for='onlineOnly') Продавец&nbsp;
+                            span.badge.badge-success Online
+            .col-md-4
+                if user && user.isAdmin
+                    .btn-group.pull-right
+                        a(href='/lots/' + lp.lot_id + '/edit'  ).btn.btn-light Изменить
+                        input(type="button" onclick='swal({title:"Удалить эту страницу?",text:"После подтврждения эта страница будет полностью удалена со всеми предложениями!",type:"warning",showCancelButton:true,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Подтвердить",cancelButtonText:"Отмена"}).then(function () {location.href="/lots/' + lp.lot_id + '/delete"},function(){})', value="Удалить").btn.btn-danger
+                        a(href='/lots/' + lp.lot_id + '/trade' ).btn.btn-primary.pull-right Продать #{lp.title.toLowerCase()}
+                else
+                    a(href='/lots/'+lp.lot_id+'/trade').btn.btn-primary.pull-right Продать #{lp.title.toLowerCase()}
+        .row.filters
+            .col-md-8
+                .form-inline
+                    -if(lp.classes && lp.classes.length > 0)
+                        .form-group
+                            label Класс
+                            select(data-name='class').sort-field#class.form-control
+                                option(value='') Любой
+                                each _class in lp.classes
+                                    option(value=_class._id)=_class.name
+                    -if(lp.races && lp.races.length > 0)
+                        .form-group
+                            label Расса
+                            select(data-name='race').sort-field#race.form-control
+                                option(value='') Любая
+                                each race in lp.races
+                                    option(value=race._id)=race.name
+                    -if(lp.custom_fields && lp.custom_fields.length > 0)
+                        each cf in lp.custom_fields
+                            if(cf.ftype == 'list')
+                                .form-group
+                                    label=cf.name
+                                    select.sort-field(data-name='cf['+cf._id+']').form-control
+                                        option(value='') Все
+                                        each cf_field in cf.list
+                                            option(value=cf_field)=cf_field
+    .row
+        .col-md-12
+            table#lot-results-table.table.table-condensed.table-hover.results-table
+                thead
+                    tr
+                        th Сервер
+                        -if(lp.sides && lp.sides.length > 0)
+                            th Сторона
+                        th Продавец
+                        th Краткое описание
+                        th Цена
+                tbody
+                    each lot in lots
+                        if lot.show
+                            tr.offer-row(data-link="/lots/offer/"+lot._id)
+                                td=servers[lot.server]
+                                -if(lp.sides && lp.sides.length > 0)
+                                    td=sides[lot.side]
+                                td=lot._owner.username
+                                    | &nbsp;
+                                    if lot._owner.isOnline
+                                        label.badge.badge-success online
+                                    else
+                                        if lot._owner.isInTouch
+                                            label.badge.badge-info на связи
+                                        else
+                                            label.badge.badge-danger offline
+                                    if( lot._owner.deals_count && lot._owner.deals_count > 0 )
+                                        .text-muted На сайте #{lot._owner._createdAt}, Сделок: #{lot._owner.deals_count}, Отзывов: #{lot._owner.comments.length}
+                                    else
+                                        .text-muted На сайте #{lot._owner._createdAt}
+
+                                td=lot.short_desc
+                                td=lot.price2
+                                    | &nbsp;
+                                    i.fa.fa-rub
+    .row
+        .col-md-12
+            div!=lp.description

@@ -1,0 +1,28 @@
+extends ../layout
+block content
+    h2 Лог
+    include partials/header
+    .row.margin-bottom-sm
+        .col-md-2
+            input.form-control(type="text", name="daterange", id='date-range' )
+    table#logs.table.table-hover(data-order='[[ 3, "desc" ]]')
+        thead
+            tr
+                th Пользователь
+                th Описание
+                th IP
+                th Время
+                th Действие
+    .modal.fade.bs-ban(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel')
+        .modal-dialog.modal-sm(role='document')
+            .modal-content
+                .row
+                    button(onclick="ban(this)").btn.btn-danger.btn-lg.col-md-12 Забанить пользователя
+                .row
+                    button(onclick="banip(this)").btn.btn-danger.btn-lg.col-md-12 Забанить IP
+block scripts
+    script(src='//cdn.jsdelivr.net/momentjs/latest/moment.min.js', type="text/javascript")
+    script(src='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js', type="text/javascript")
+
+block stylesheets
+    link(rel='stylesheet', href='//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css')

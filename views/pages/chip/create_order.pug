@@ -1,0 +1,76 @@
+extends ../../layout
+
+
+block content
+    .page-header
+        h1 Подтверждение заказа
+    .row
+        .col-md-2
+            b.text-muted Продавец
+        .col-md-1
+            p=offer._owner.username
+                | &nbsp;
+                if offer._owner.isOnline
+                    label.badge.badge-success online
+                else
+                    if offer._owner.isInTouch
+                        label.badge.badge-info на связи
+                    else
+                        label.badge.badge-danger offline
+    .row
+        .col-md-2
+            b.text-muted Игра
+        .col-md-4
+            p=offer._game.title
+    .row
+        .col-md-2
+            b.text-muted Валюта
+        .col-md-2
+            p=offer._chip_page.currency
+    .row
+        .col-md-2
+            b.text-muted Сервер
+        .col-md-4
+            p=offer._server.name
+    if(offer._side)
+        .row
+            .col-md-2
+                b.text-muted Сторона
+            .col-md-4
+                p=offer._side.name
+    .row
+        .col-md-2
+            b.text-muted Кол-во валюты
+        .col-md-4
+            p=order.coins_amount
+                | &nbsp;
+                =offer._chip_page.currency_sell_sufix
+                | &nbsp;
+                =offer._chip_page.currency_plural
+    .row
+        .col-md-2
+            b.text-muted Имя персонажа
+        .col-md-4
+            p=order.charname
+    .row
+        .col-md-2
+            b.text-muted Способ оплаты
+        .col-md-4
+            p=order.ps_method_title
+    .row
+        .col-md-2
+            b.text-muted Сумма
+        .col-md-4
+            p=order.sum
+    .row
+        .col-md-3
+            form(method='post', action='/order/create')
+                input(type='hidden', name='chip_id', value=order.chip_id)
+                input(type='hidden', name='coins_count', value=order.coins_amount)
+                input(type='hidden', name='sum', value=order.sum)
+                input(type='hidden', name='payment_method', value=order.payment_method)
+                input(type='hidden', name='type', value=order.type)
+                input(type='hidden', name='charname', value=order.charname)
+                input(type='hidden', name='_csrf', value=_csrf)
+                button.btn.btn-primary(type='submit') Оплатить
+                a.btn.btn-default.float-md-right(href='javascript:history.go(-1)') Отменить

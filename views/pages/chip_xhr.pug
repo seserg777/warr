@@ -1,0 +1,40 @@
+table#results-table.table.table-condensed.table-hover.results-table
+    thead
+        tr
+            th Сервер
+            -if(cp.sides && cp.sides.length > 0)
+                th Сторона
+            th Продавец
+            th Наличие
+            th Цена
+                |  за
+                | &nbsp;
+                =cp.currency_sell_count
+                | &nbsp;
+                =cp.currency_sell_sufix
+    tbody
+        each chip in chips
+            if chip.show
+                tr.offer-row(data-link="/chips/offer/"+chip._id)
+                    td=servers[chip.server_id]
+                    -if(cp.sides && cp.sides.length > 0)
+                        td=sides[chip.side_id]
+                    td=chip._owner.username
+                        | &nbsp;
+                        if chip._owner.isOnline
+                            label.badge.badge-success online
+                        else
+                            if chip._owner.isInTouch
+                                label.badge.badge-info на связи
+                            else
+                                label.badge.badge-danger offline
+                        if( chip._owner.deals_count && chip._owner.deals_count > 0 )
+                            .text-muted На сайте #{chip._owner._createdAt}, Сделок: #{chip._owner.deals_count}, Отзывов: #{chip._owner.comments.length}
+                        else
+                            .text-muted На сайте #{chip._owner._createdAt}
+                    td=numeral(chip.count).format('0,0').replace(/,/g,' ')
+                        | &nbsp;
+                        =cp.currency_sell_sufix
+                    td=chip.price.toFixed(2)
+                        | &nbsp;
+                        i.fa.fa-rub

@@ -1,0 +1,58 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    .row
+        .col-md-12
+            table.table.table-hover
+                thead
+                    tr
+                        th операция
+                        th платёжная система
+                        th сумма
+                        th дата
+                        th(style='width:12%;') статус
+                tbody
+                    -var i = User.operations.length
+                    while i >= 0
+                        -i--;
+                        -op=User.operations[i];
+                        if op
+                            tr
+                                td
+                                    =op.subject
+                                td
+                                    case op.ps
+                                        when 'Webmoney'
+                                            | WebMoney
+                                        when 'Balance'
+                                            | Баланс сайта
+                                        when 'Yandex.Money'
+                                            | Я.Деньги
+                                        default
+                                            =op.ps
+
+                                td(class=op.type == 'in' ? "" : "text-danger")
+                                    =op.type == 'in' ? "+" : "-"
+                                    | &nbsp;
+                                    =op.sum.toFixed(2)
+                                    i.fa.fa-rub
+                                td
+                                    =moment(op.date).format('DD MMM, в HH:mm')
+                                td
+                                    case op.status
+                                        when 'refunded'
+                                            i.fa.fa-undo
+                                            | Возврат
+                                        when 'pending'
+                                            i.fa.fa-clock-o
+                                            | Ожидает
+                                        when 'success'
+                                            i.fa.fa-check-circle-o
+                                            | Проведена
+                                        when 'canceled'
+                                            i.fa.fa-ban
+                                            | Отменена
+                                        when 'refund'
+                                            i.fa.fa-undo
+                                            | Возврат

@@ -1,0 +1,63 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    -var id = '';
+    each chip in chips
+        if chip._game._id != id
+            -id = chip._game._id;
+            a(href='/chips/' + chip._chip_page.chip_id)
+                h2=chip._game.title
+            table.table.table-hover.results-table
+                thead
+                    th Серевер
+                    if chip.side_id
+                        th.side Сторона
+                    th.amount.text-right Наличие
+                    th.price.text-right Цена
+                        |  за
+                        | &nbsp;
+                        =chip._chip_page.currency_sell_count
+                        | &nbsp;
+                        =chip._chip_page.currency_sell_sufix
+                    th.delete.text-right удаление
+                tbody
+                    each chip2 in chips
+                        if chip2._game._id == id
+                            tr.offer-rowx(data-link='/chips/offer/' + chip2._id)
+                                td=chip2._chip_page.servers.id(chip2.server_id).name
+                                if chip2.side_id
+                                    td=chip2._chip_page.sides.id(chip2.side_id).name
+                                td.text-right=numeral(chip2.count).format('0,0').replace(/,/g,' ')
+                                    =" "+ chip2._chip_page.currency_sell_sufix
+                                td.text-right=chip2.price
+                                    i.fa.fa-rub
+                                td.text-right
+                                    button(onclick='swal({title:"Удалить этот лот?",type:"warning",showCancelButton:true,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Подтвердить",cancelButtonText:"Отмена"}).then(function () {location.href="'+adminPage+'/user/'+User._id+'/remove-deal/chip/'+chip2._id+'"},function(){})').btn.btn-danger Удалить
+    -id = '';
+    each lot in lots
+        if lot._game._id != id
+            -id = lot._game._id;
+            a(href='/lots/'+lot._lot_page.lot_id)
+                h2=lot._game.title
+            table.table.table-hover.results-table
+                thead
+                    th.server Серевер
+                    if lot.side
+                        th.side Сторона
+                    th Описание
+                    th.amount.text-right Цена
+                    th.delete.text-right удаление
+                tbody
+                    each lot2 in lots
+                        if lot2._game._id == id
+                            tr.offer-rowx(data-link='/lots/offer/'+lot2._id)
+                                td=lot2._lot_page.servers.id(lot2.server).name
+                                if lot2.side
+                                    td=lot2._lot_page.sides.id(lot2.side).name
+                                td=lot2.short_desc
+                                td.text-right=lot2.price
+                                    i.fa.fa-rub
+                                td.text-right
+                                    button(onclick='swal({title:"Удалить этот лот?",type:"warning",showCancelButton:true,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Подтвердить",cancelButtonText:"Отмена"}).then(function () {location.href="' + adminPage + '/user/' + User._id + '/remove-deal/lot/' + lot2._id + '"},function(){})').btn.btn-danger Удалить
+

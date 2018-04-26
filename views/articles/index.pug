@@ -1,0 +1,33 @@
+extends ../layout
+block content
+    .page-header
+        h1
+            | #{title}
+
+    each article in articles
+        .row
+            .col-sm-12
+                .card
+                    .card-body
+                        h4.float-left.card-title
+                            a(href="/blog/"+article.human_id)=article.title
+                        if(user && user.isAdmin)
+                            span.float-right
+                                a.btn.btn-sm.btn-outline-warning(href='/blog/edit/'+article.human_id) изменить
+                                span="  "
+                                button(onclick="javascript:void(0)" data-humanid=article.human_id)#delete-blog.btn.btn-sm.btn-outline-danger удалить
+                        .clearfix
+                        p.card-text!=article.body_short
+                    .card-footer.text-muted.text-center
+                        span=article.hdate
+
+                .mt-4
+    .row
+        .col-md-12
+            .mt-4
+
+
+    if(user && user.isAdmin)
+        .row.justify-content-center
+            .col-md-auto
+                a.btn.btn-outline-success.btn-lg(href="/blog/add") Добавить новость

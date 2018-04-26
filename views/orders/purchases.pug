@@ -1,0 +1,33 @@
+extends ../layout
+block stylesheets
+
+block scripts
+
+block content
+    h1.page-header Мои покупки
+    if orders.length == 0
+        p.lead Пусто.
+    else
+        table.table.table-hover.table-condensed.results-table
+            thead
+                tr
+                    th Заказ
+                    th Описание
+                    th Продавец
+                    th Статус
+                    th Сумма
+            tbody
+                each order in orders
+                    tr.offer-row(data-link="/order/" + order._id, class=order.status == '3' ? "active" : "")
+                        td.text-nowrap
+                            a(href="/order/"+order._id)=order.order_id
+                            br
+                            span.text-muted=moment(order.updatedAt).fromNow()
+                        td
+                            =order.description
+                            |&nbsp;
+                        td
+                            a(href="/users/"+order._seller._id)=order._seller.username
+                        td=Helper.TextStatus(order.status)
+                        td
+                            =order.sum.toFixed(2)

@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+    .page-header
+        h3 Регистраци
+    .panel.panel-default
+        .panel-body
+            .media
+                a.mr-3(href=profileLink, target='_blank')
+                    img(src=profilePhoto)
+                .media-body
+                    h5.mt-0 #{profileName}
+                    | Для регистрации укажите имя на сайте.
+    form.form-horizontal(id='signup-form', method='POST', data-toggle='validator')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+            label.col-sm-3.control-label(for='username')
+            .col-sm-7
+                input.form-control(type='text', name='username', id='username', placeholder='Имя', autofocus, required, pattern='[_a-zA-Z0-9]{4,20}', title="Допустимы только буквы латинского алфавита и цифры!")
+        if need_promo
+            .form-group
+                label.col-sm-3.control-label(for='promo')
+                .col-sm-7
+                    input.form-control(type='text', name='promo', id='promo', placeholder='Код приглашения', autofocus, required, pattern='[_a-zA-Z0-9]{4,20}', title="Допустимы только буквы латинского алфавита и цифры!")
+
+        .form-group
+            .col-sm-offset-3.col-sm-7
+                button.btn.btn-success(type='submit')
+                    i.fa.fa-user-plus
+                    | Подтвердить
+block scripts
+    script(src='/js/lib/validator.min.js')

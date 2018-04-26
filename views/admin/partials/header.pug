@@ -1,0 +1,17 @@
+ul.nav.nav-tabs
+    li
+        a.nav-link(href=adminPage class=(menuCode == 800) ? 'active' : undefined) Статистика
+    li
+        a.nav-link(href=adminPage + '/orders' class=(menuCode == 801) ? 'active' : undefined) Заказы
+    li
+        a.nav-link(href=adminPage + '/users' class=(menuCode == 802) ? 'active' : undefined) Пользователи
+    li
+        a.nav-link(href=adminPage + '/payment-systems' class=(menuCode == 803) ? 'active' : undefined) Платёжные системы
+    li
+        a.nav-link(href=adminPage + '/operations' class=(menuCode == 806) ? 'active' : undefined) Денежные операции
+    li
+        a.nav-link(href=adminPage + '/config' class=(menuCode == 804) ? 'active' : undefined) Настройки
+    li
+        a.nav-link(href=adminPage + '/log' class=(menuCode == 807) ? 'active' : undefined) Логи
+    li
+        a.nav-link(href=adminPage + '/letters' class=(menuCode == 808) ? 'active' : undefined) Рассылка

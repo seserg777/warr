@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+    include partials/user_header
+    .row
+        .col-md-3
+            p Кол-во регистраций
+        .col-md-1
+            p=invited
+    .row
+        .col-md-3
+            p Кол-во сделок
+        .col-md-1
+            p=total_deals
+    .row
+        .col-md-3
+            p Сумма сделок
+        .col-md-1
+            p=deals_sum
+    .row
+        .col-md-3
+            p Итого вознагрождения
+        .col-md-1
+           p=ref_sum
+
+    table.table.table-bordered
+        thead
+            th Приглашенные партнеры
+        tbody
+            each partner in partners
+                tr
+                    td
+                        a(href=adminPage+'/user/'+partner._id)=partner.username

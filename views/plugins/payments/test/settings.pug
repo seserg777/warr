@@ -1,0 +1,19 @@
+extends ../../../layout
+block content
+    h2 Платёжные системы
+    include ../../../admin/partials/header
+    .row.margin-bottom-md
+    .row
+        .col-md-12
+            form
+                .form-group
+                    label(for='exampleInputEmail1') Например сикретный ключ
+                    input#exampleInputEmail1.form-control(placeholder='Ключ')
+                .form-group
+                    label(for='exampleInputPassword1') Например кошелёк
+                    input#exampleInputPassword1.form-control( placeholder='Кошелёк')
+                .checkbox
+                    label
+                        input(type='checkbox')
+                        |  например Тестовый режим
+                button.btn.btn-default(type='submit') Сохранить
