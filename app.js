@@ -590,7 +590,7 @@ io.sockets.on('connection', function (socket){
             }
     });
 
-    socket.on('my-counters', async (confirm) => {
+    socket.on('my-counters', function (confirm){
         if (userId) {
             let user = await User.findById(userId);
             user = user.toObject();
