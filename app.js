@@ -513,7 +513,7 @@ io.use(passportSocketIo.authorize({
     fail: onAuthorizeFail
 }));
 let client_last_chat = {};
-io.sockets.on('connection', function (socket) => {
+io.sockets.on('connection', function (socket){
     var userId = false;
     if (socket.request.user && socket.request.user.logged_in)
         userId = socket.request.user._id;
