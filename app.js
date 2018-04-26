@@ -516,7 +516,7 @@ io.use(passportSocketIo.authorize({
     fail: onAuthorizeFail
 }));
 let client_last_chat = {};
-io.sockets.on('connection', function (socket){
+io.sockets.on('connection', async (socket) => {
     var userId = false;
     if (socket.request.user && socket.request.user.logged_in)
         userId = socket.request.user._id;
@@ -590,7 +590,7 @@ io.sockets.on('connection', function (socket){
             }
     });
 
-    socket.on('my-counters', function (confirm){
+    socket.on('my-counters', async (confirm) => {
         if (userId) {
             let user = await User.findById(userId);
             user = user.toObject();
