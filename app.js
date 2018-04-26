@@ -98,8 +98,11 @@ app.set('adminPage', '/admin1337');
 
 app.use(compression());
 app.use(sass({
-    src: path.join(__dirname, 'public'),
-    dest: path.join(__dirname, 'public')
+    //src: path.join(__dirname, 'public'),
+    //dest: path.join(__dirname, 'public'),
+	src: path.join(__dirname, 'public/css'),
+    dest: path.join(__dirname, 'public/css'),
+	//debug: true
 }));
 //app.use(logger('dev'));
 app.use(bodyParser.json());
