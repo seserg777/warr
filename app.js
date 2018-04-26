@@ -239,7 +239,7 @@ app.use(function (req, res, next) {
         User.findOne({promo: req.query.index}, (err, user)=>{
             if(user) {
                 req.session.invitedBy = user._id;
-                //console.log('1111111111111111111111111');
+                //console.log('11111111111111111111111111');
             }
         });
     }
